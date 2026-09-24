@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>BoxCloud & PlayBox - BoxTwister Idiomas</title>
+  <title>BoxCloud & PlayBox - Retrô Funcional</title>
   <style>
     :root {
       --bg-main: #121212;
@@ -13,7 +13,7 @@
       --text-sub: #999999;
       --accent: #3b82f6;
       --accent-hover: #2563eb;
-      --lang-color: #10b981; /* Verde clássico para seções de idiomas */
+      --lang-color: #10b981;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -138,8 +138,6 @@
             <button type="button" class="pill active" onclick="mudarFiltro('todos', this)">Todos</button>
             <button type="button" class="pill" onclick="mudarFiltro('nes', this)">NES</button>
             <button type="button" class="pill" onclick="mudarFiltro('snes', this)">Super Nintendo</button>
-            <button type="button" class="pill" onclick="mudarFiltro('sega', this)">Mega Drive</button>
-            <button type="button" class="pill" onclick="mudarFiltro('arcade', this)">Arcade</button>
           </div>
         </div>
 
@@ -156,7 +154,6 @@
             <option value="Inglês">Idioma: Inglês (English)</option>
             <option value="Espanhol">Idioma: Espanhol (Español)</option>
             <option value="Francês">Idioma: Francês (Français)</option>
-            <option value="Japonês">Idioma: Japonês (日本語)</option>
           </select>
           <textarea id="twister-input" class="retro-input" placeholder="Escreva uma frase ou dúvida no idioma selecionado..." style="height:70px; resize:none;"></textarea>
           <button type="button" class="btn-retro btn-lang" style="width:auto; padding:6px 12px;" onclick="publicarTwister()">Publicar Lição/Frase</button>
@@ -186,7 +183,7 @@
         <h2>Cloud Storage (Arquivos e Saves)</h2>
         <p style="color:var(--text-sub); font-size:0.85rem; margin-top:5px;">Gerencie seus arquivos e ROMs.</p>
         <label class="btn-retro" style="display:inline-block; width:auto; cursor:pointer; margin-top:15px;">
-          Carregar Arquivo
+          Carregar ROM Própria
           <input type="file" style="display:none;" onchange="subirArquivo(event)" />
         </label>
         <div class="grid" id="cloud-grid"></div>
@@ -204,11 +201,10 @@
   </div>
 
   <script>
+    // Jogos apontando para ROMs de teste estáveis compatíveis com o emulador web
     const databaseJogos = [
-      { id: 1, nome: "Super Mario World", sistema: "snes", sysName: "Super Nintendo", core: "snes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
-      { id: 2, nome: "Super Mario Bros", sistema: "nes", sysName: "Nintendo (NES)", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
-      { id: 3, nome: "Sonic the Hedgehog", sistema: "sega", sysName: "Mega Drive", core: "segaMD", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
-      { id: 4, nome: "Pac-Man", sistema: "arcade", sysName: "Arcade", core: "arcade", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" }
+      { id: 1, nome: "LJ65 (Puzzle Clássico NES)", sistema: "nes", sysName: "Nintendo (NES)", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 2, nome: "Super Mario Bros (NES Test)", sistema: "nes", sysName: "Nintendo (NES)", core: "nes", url: "https://raw.githubusercontent.com/mihaip/jsnes/master/roms/mario.nes" }
     ];
 
     let filtroAtual = 'todos';
@@ -274,19 +270,28 @@
       document.getElementById('emulator-screen').style.display = 'flex';
       document.getElementById('emulator-title').innerText = titulo;
       const container = document.getElementById('emulator-container');
-      container.innerHTML = '<div id="game"></div>';
+      container.innerHTML = '<div id="game" style="width:100%;height:100%;"></div>';
+      
       window.EJS_player = '#game';
       window.EJS_core = core;
       window.EJS_gameUrl = url;
       window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+      
+      // Remove script anterior se existir para evitar conflito
+      const oldScript = document.getElementById('ejs-loader');
+      if(oldScript) oldScript.remove();
+
       const s = document.createElement('script');
+      s.id = 'ejs-loader';
       s.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
-      container.appendChild(s);
+      document.body.appendChild(s);
     }
 
     function fecharEmulador() {
       document.getElementById('emulator-screen').style.display = 'none';
       document.getElementById('emulator-container').innerHTML = '';
+      const oldScript = document.getElementById('ejs-loader');
+      if(oldScript) oldScript.remove();
     }
 
     function renderTwister() {
@@ -364,4 +369,4 @@
   </script>
 </body>
   </html>
-            
+  
