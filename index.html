@@ -25,7 +25,7 @@
     .shape1 { width: 300px; height: 300px; background: #7928ca; top: -50px; left: -50px; }
     .shape2 { width: 300px; height: 300px; background: #0070f3; bottom: -50px; right: -50px; }
 
-    /* Modal de Login (Apenas quando clica em trocar conta) */
+    /* Modal de Login */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(15px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px;
@@ -142,20 +142,20 @@
       <h2 style="margin-bottom:8px;">📦 BoxCloud Login</h2>
       <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Digite qualquer e-mail e senha para entrar.</p>
 
-      <form onsubmit="fazerLoginEmail(event)">
-        <input type="email" id="input-email" class="glass-input" placeholder="Seu e-mail" required />
-        <input type="password" id="input-pass" class="glass-input" placeholder="Sua senha" required />
-        <button type="submit" class="btn-apple" style="background:var(--green);">✉️ Entrar com E-mail</button>
-      </form>
+      <div>
+        <input type="email" id="input-email" class="glass-input" placeholder="Seu e-mail" />
+        <input type="password" id="input-pass" class="glass-input" placeholder="Sua senha" />
+        <button type="button" class="btn-apple" style="background:var(--green);" onclick="fazerLoginEmail()">✉️ Entrar com E-mail</button>
+      </div>
 
       <div class="divider">ou continue com</div>
       
-      <button class="btn-apple btn-ms" onclick="fazerLogin('microsoft')">
+      <button type="button" class="btn-apple btn-ms" onclick="fazerLogin('microsoft')">
         <svg width="18" height="18" viewBox="0 0 23 23"><path fill="#f35325" d="M1 1h10v10H1z"/><path fill="#81bc06" d="M12 1h10v10H1z"/><path fill="#05a6f0" d="M1 12h10v10H1z"/><path fill="#ffba08" d="M12 12h10v10H1z"/></svg>
         Entrar com Microsoft
       </button>
 
-      <button class="btn-apple btn-guest" onclick="fecharModalLogin()">
+      <button type="button" class="btn-apple btn-guest" onclick="fecharModalLogin()">
         👤 Continuar como Convidado
       </button>
     </div>
@@ -197,7 +197,7 @@
     </aside>
 
     <main>
-      <!-- 1. CLOUD & UPLOAD (PÁGINA INICIAL) -->
+      <!-- 1. CLOUD & UPLOAD -->
       <section id="tab-cloud" class="tab-content active">
         <h2>Armazenamento na Nuvem (100 TB)</h2>
         <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Sincronizado automaticamente com backup do iBox Antigo.</p>
@@ -277,7 +277,6 @@
         <h2>PlayBox Store 🎮</h2>
         <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Encontre clássicos ou carregue qualquer arquivo de jogo (.nes, .snes, .gba, .gbc, .md, .n64, .zip).</p>
 
-        <!-- BUSCA E FILTROS -->
         <div class="store-controls">
           <input type="text" id="game-search" class="glass-input" placeholder="🔍 Buscar jogo..." oninput="filtrarJogos()" style="margin-bottom:0;" />
           
@@ -291,7 +290,6 @@
           </div>
         </div>
 
-        <!-- CARREGAR QUALQUER ROM -->
         <div style="background: rgba(0, 122, 255, 0.15); border: 1px dashed var(--accent); padding: 12px; border-radius: 16px; margin-bottom: 20px; text-align: center;">
           <label style="cursor: pointer; font-size:0.9rem; font-weight:bold; color:white; display:flex; align-items:center; justify-content:center; gap:8px;">
             📂 Carregar ROM do Celular/PC
@@ -320,7 +318,6 @@
     let platFiltroAtual = 'todos';
     let arquivosSalvos = [];
 
-    // MODAL DE LOGIN (Aceita qualquer e-mail/senha diretamente)
     function abrirModalLogin() {
       document.getElementById('modal-login').style.display = 'flex';
     }
@@ -329,15 +326,18 @@
       document.getElementById('modal-login').style.display = 'none';
     }
 
-    function fazerLoginEmail(e) {
-      e.preventDefault();
+    function fazerLoginEmail() {
       const email = document.getElementById('input-email').value;
-      if(email) {
+      if (email.trim() !== "") {
         document.getElementById('user-name').innerText = email.split('@')[0];
         document.getElementById('account-type').innerText = "Conta Conectada";
         document.getElementById('user-avatar').innerText = "✉️";
-        fecharModalLogin();
+      } else {
+        document.getElementById('user-name').innerText = "Usuário";
+        document.getElementById('account-type').innerText = "Acesso Livre";
+        document.getElementById('user-avatar').innerText = "👤";
       }
+      fecharModalLogin();
     }
 
     function fazerLogin(tipo) {
@@ -378,7 +378,384 @@
           <button class="btn-apple" style="margin-top:10px;" onclick="executarEmulador('${j.core}', '${j.url}', '${j.nome}')">▶️ Jogar</button>
         `;
         grid.appendChild(card);
-      });
+            <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>BoxCloud & PlayBox Universal Games</title>
+  <style>
+    :root {
+      --glass-bg: rgba(255, 255, 255, 0.12);
+      --glass-bg-hover: rgba(255, 255, 255, 0.22);
+      --glass-border: rgba(255, 255, 255, 0.25);
+      --text-main: #ffffff;
+      --text-sub: rgba(255, 255, 255, 0.75);
+      --accent: #007aff;
+      --green: #10b981;
+      --gold: #f59e0b;
+      --ms-color: #00a4ef;
+      --theme-bg: #0f0c20;
     }
 
-   
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--theme-bg); color: var(--text-main); min-height: 100vh; overflow-x: hidden; position: relative; }
+
+    .bg-shape { position: fixed; border-radius: 50%; filter: blur(90px); z-index: 0; pointer-events: none; }
+    .shape1 { width: 300px; height: 300px; background: #7928ca; top: -50px; left: -50px; }
+    .shape2 { width: 300px; height: 300px; background: #0070f3; bottom: -50px; right: -50px; }
+
+    /* Modal de Login */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(15px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border); border-radius: 24px; padding: 2rem; width: 100%; max-width: 400px; text-align: center;
+      position: relative;
+    }
+
+    .close-modal-btn {
+      position: absolute; top: 12px; right: 16px; background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;
+    }
+
+    .glass-input {
+      width: 100%; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border);
+      padding: 12px; border-radius: 12px; color: white; font-size: 0.95rem; outline: none; margin-bottom: 0.8rem;
+    }
+
+    .btn-apple {
+      background: var(--accent); color: white; border: none; padding: 12px 18px; border-radius: 14px;
+      font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 10px; transition: 0.2s;
+    }
+    .btn-apple:hover { opacity: 0.9; }
+    .btn-ms { background: #2f2f2f; border: 1px solid var(--ms-color); color: white; }
+    .btn-guest { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); }
+
+    .divider {
+      display: flex; align-items: center; text-align: center; color: var(--text-sub); font-size: 0.8rem; margin: 10px 0 15px 0;
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--glass-border); }
+    .divider::before { margin-right: .5em; }
+    .divider::after { margin-left: .5em; }
+
+    /* Layout Principal */
+    #app { display: flex; flex-direction: column; width: 100%; min-height: 100vh; z-index: 1; padding: 15px; gap: 15px; position: relative; }
+    @media (min-width: 850px) { #app { flex-direction: row; } aside { width: 300px; } }
+
+    aside {
+      background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border);
+      border-radius: 20px; padding: 1.2rem; display: flex; flex-direction: column; gap: 15px;
+    }
+
+    .user-profile-box {
+      display: flex; align-items: center; gap: 12px; background: rgba(0, 0, 0, 0.25);
+      padding: 12px; border-radius: 16px; border: 1px solid var(--glass-border);
+    }
+
+    .avatar-img { width: 42px; height: 42px; border-radius: 50%; background: #333; display:flex; justify-content:center; align-items:center; font-size:1.4rem; }
+
+    nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; flex-wrap: nowrap; }
+    @media (min-width: 850px) { nav { flex-direction: column; } }
+
+    .nav-btn {
+      background: transparent; border: none; color: var(--text-sub); padding: 12px 16px;
+      border-radius: 14px; font-size: 0.95rem; cursor: pointer; white-space: nowrap; text-align: left;
+    }
+    .nav-btn.active { background: var(--glass-bg-hover); color: white; border: 1px solid rgba(255, 255, 255, 0.2); }
+
+    main {
+      flex: 1; background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border);
+      border-radius: 20px; padding: 1.5rem; overflow-y: auto;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Mascote Box */
+    .mascot-container { display: flex; flex-direction: column; align-items: center; margin: 15px 0; }
+    .mascot-box { width: 80px; height: 80px; }
+    .speech-bubble {
+      background: white; color: #333; padding: 10px 15px; border-radius: 16px; font-size: 0.85rem;
+      font-weight: bold; margin-bottom: 10px; max-width: 260px; text-align: center;
+    }
+
+    .lang-select {
+      width: 100%; background: rgba(0,0,0,0.3); color: white; border: 1px solid var(--glass-border);
+      padding: 10px; border-radius: 12px; font-size: 1rem; margin-bottom: 15px; outline: none;
+    }
+
+    .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; }
+    .file-card { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 12px; border-radius: 14px; word-break: break-all; }
+
+    /* Filtros e Busca */
+    .store-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .platform-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+    .pill-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white;
+      padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+    }
+    .pill-btn.active { background: var(--accent); border-color: var(--accent); }
+
+    /* Emulador Tela Cheia */
+    #emulator-screen {
+      display: none; position: fixed; inset: 0; background: #000; z-index: 10000;
+      flex-direction: column; align-items: center; justify-content: flex-start;
+    }
+    #emulator-screen header {
+      width: 100%; background: #111; padding: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333;
+    }
+    #emulator-container { width: 100%; flex: 1; position: relative; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-shape shape1"></div>
+  <div class="bg-shape shape2"></div>
+
+  <!-- MODAL DE LOGIN -->
+  <div id="modal-login" class="modal-overlay">
+    <div class="glass-card">
+      <button class="close-modal-btn" onclick="fecharModalLogin()">✖</button>
+      <h2 style="margin-bottom:8px;">📦 BoxCloud Login</h2>
+      <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Digite qualquer e-mail e senha para entrar.</p>
+
+      <div>
+        <input type="email" id="input-email" class="glass-input" placeholder="Seu e-mail" />
+        <input type="password" id="input-pass" class="glass-input" placeholder="Sua senha" />
+        <button type="button" class="btn-apple" style="background:var(--green);" onclick="fazerLoginEmail()">✉️ Entrar com E-mail</button>
+      </div>
+
+      <div class="divider">ou continue com</div>
+      
+      <button type="button" class="btn-apple btn-ms" onclick="fazerLogin('microsoft')">
+        <svg width="18" height="18" viewBox="0 0 23 23"><path fill="#f35325" d="M1 1h10v10H1z"/><path fill="#81bc06" d="M12 1h10v10H1z"/><path fill="#05a6f0" d="M1 12h10v10H1z"/><path fill="#ffba08" d="M12 12h10v10H1z"/></svg>
+        Entrar com Microsoft
+      </button>
+
+      <button type="button" class="btn-apple btn-guest" onclick="fecharModalLogin()">
+        👤 Continuar como Convidado
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTAINER DE EMULAÇÃO -->
+  <div id="emulator-screen">
+    <header>
+      <span id="game-title-display" style="font-weight:bold; font-size:0.9rem;">🎮 PlayBox Emulador</span>
+      <button onclick="fecharEmulador()" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; cursor:pointer;">✖ Sair do Jogo</button>
+    </header>
+    <div id="emulator-container"></div>
+  </div>
+
+  <!-- APP PRINCIPAL -->
+  <div id="app">
+    <aside>
+      <div style="font-weight:800; font-size:1.3rem;">📦 BoxCloud</div>
+
+      <div class="user-profile-box">
+        <div class="avatar-img" id="user-avatar">👤</div>
+        <div>
+          <div style="font-weight:bold; font-size:0.95rem;" id="user-name">Usuário</div>
+          <div style="font-size:0.75rem; color:var(--gold);" id="account-type">Acesso Livre</div>
+        </div>
+      </div>
+      
+      <div style="background: rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; padding:10px; border-radius:12px; font-size:0.8rem;">
+        ⚡ <strong>Sua Nuvem:</strong> <span id="storage-status">100 TB Ativos</span><br>
+        <button onclick="abrirModalLogin()" style="background:none; border:none; color:white; font-size:0.75rem; text-decoration:underline; cursor:pointer; margin-top:4px;">Trocar de Conta</button>
+      </div>
+
+      <nav>
+        <button class="nav-btn active" id="btn-tab-cloud" onclick="switchTab('cloud', this)">📁 Cloud & Upload</button>
+        <button class="nav-btn" id="btn-tab-twister" onclick="switchTab('twister', this)" style="color:var(--gold);">🌪️ BoxTwister</button>
+        <button class="nav-btn" id="btn-tab-watch" onclick="switchTab('watch', this)" style="color:#f43f5e;">📺 TwisterWatch</button>
+        <button class="nav-btn" id="btn-tab-play" onclick="switchTab('play', this)">🎮 PlayBox Store</button>
+      </nav>
+    </aside>
+
+    <main>
+      <!-- 1. CLOUD & UPLOAD -->
+      <section id="tab-cloud" class="tab-content active">
+        <h2>Armazenamento na Nuvem (100 TB)</h2>
+        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Sincronizado automaticamente com backup do iBox Antigo.</p>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:1.5rem;">
+          <label class="btn-apple" style="width:auto; cursor:pointer;">
+            📤 Enviar Arquivo Real
+            <input type="file" style="display:none;" onchange="enviarArquivo(event)" />
+          </label>
+          <button class="btn-apple" style="width:auto; background:rgba(255,255,255,0.15);" onclick="exportarBackup()">💾 Exportar Backup (.json)</button>
+        </div>
+
+        <h3>Arquivos Gravados:</h3>
+        <div class="file-grid" id="file-list"></div>
+      </section>
+
+      <!-- 2. BOXTWISTER IDIOMAS -->
+      <section id="tab-twister" class="tab-content">
+        <h2>BoxTwister Idiomas 🌪️</h2>
+        
+        <label style="font-size:0.85rem; color:var(--text-sub);">Escolha o Idioma para Estudar:</label>
+        <select class="lang-select" id="lang-picker" onchange="trocarIdioma()">
+          <option value="en">🇺🇸 Inglês</option>
+          <option value="es">🇪🇸 Espanhol</option>
+          <option value="pl">🇵🇱 Polonês</option>
+          <option value="fr">🇫🇷 Francês</option>
+          <option value="de">🇩🇪 Alemão</option>
+        </select>
+
+        <div class="mascot-container">
+          <div class="speech-bubble" id="speech-box">📦 Box: Vamos praticar!</div>
+          <svg class="mascot-box" viewBox="0 0 100 100">
+            <line x1="35" y1="75" x2="35" y2="95" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" />
+            <line x1="65" y1="75" x2="65" y2="95" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" />
+            <line x1="15" y1="45" x2="5" y2="55" stroke="#f59e0b" stroke-width="5" stroke-linecap="round" />
+            <line x1="85" y1="45" x2="95" y2="55" stroke="#f59e0b" stroke-width="5" stroke-linecap="round" />
+            <rect x="15" y="20" width="70" height="55" rx="8" fill="#f59e0b" stroke="#d97706" stroke-width="3" />
+            <circle cx="38" cy="45" r="5" fill="#000" /><circle cx="62" cy="45" r="5" fill="#000" />
+            <path d="M 40 58 Q 50 68 60 58" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <div style="display:flex; justify-content:center; gap:8px; margin-bottom:15px;">
+          <button class="btn-apple" style="width:auto; padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarFalta('👔 Oscar: Mantenha a disciplina!')">👔 Oscar</button>
+          <button class="btn-apple" style="width:auto; padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarFalta('🎧 Lili: No seu ritmo!')">🎧 Lili</button>
+          <button class="btn-apple" style="width:auto; padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarFalta('🚀 Bruno: Vamos pontuar!')">🚀 Bruno</button>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.08); border-radius:18px; padding:20px; text-align:center;">
+          <h3 id="quiz-question" style="font-size:1.4rem; margin-bottom:10px;">"Good Morning"</h3>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
+            <button class="btn-apple" id="opt-1" onclick="responder(true)">Bom dia</button>
+            <button class="btn-apple" id="opt-2" style="background:rgba(255,255,255,0.1);" onclick="responder(false)">Boa noite</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. TWISTER WATCH -->
+      <section id="tab-watch" class="tab-content">
+        <h2>TwisterWatch 📺</h2>
+        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Conecte sua conta para assistir com histórico salvo na nuvem.</p>
+
+        <div class="file-grid">
+          <div class="file-card" style="text-align:center;">
+            <h3>🎬 Prime Video</h3>
+            <button class="btn-apple" style="margin-top:10px; background:#00a8e1;" onclick="window.open('https://www.primevideo.com', '_blank')">Abrir Streaming</button>
+          </div>
+          <div class="file-card" style="text-align:center;">
+            <h3>🔴 Netflix</h3>
+            <button class="btn-apple" style="margin-top:10px; background:#e50914;" onclick="window.open('https://www.netflix.com', '_blank')">Abrir Streaming</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. PLAYBOX STORE -->
+      <section id="tab-play" class="tab-content">
+        <h2>PlayBox Store 🎮</h2>
+        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Encontre clássicos ou carregue qualquer arquivo de jogo (.nes, .snes, .gba, .gbc, .md, .n64, .zip).</p>
+
+        <div class="store-controls">
+          <input type="text" id="game-search" class="glass-input" placeholder="🔍 Buscar jogo..." oninput="filtrarJogos()" style="margin-bottom:0;" />
+          
+          <div class="platform-pills">
+            <button class="pill-btn active" onclick="filtrarPlataforma('todos', this)">Todos</button>
+            <button class="pill-btn" onclick="filtrarPlataforma('snes', this)">SNES</button>
+            <button class="pill-btn" onclick="filtrarPlataforma('nes', this)">NES</button>
+            <button class="pill-btn" onclick="filtrarPlataforma('gba', this)">GBA</button>
+            <button class="pill-btn" onclick="filtrarPlataforma('sega', this)">SEGA</button>
+            <button class="pill-btn" onclick="filtrarPlataforma('n64', this)">N64</button>
+          </div>
+        </div>
+
+        <div style="background: rgba(0, 122, 255, 0.15); border: 1px dashed var(--accent); padding: 12px; border-radius: 16px; margin-bottom: 20px; text-align: center;">
+          <label style="cursor: pointer; font-size:0.9rem; font-weight:bold; color:white; display:flex; align-items:center; justify-content:center; gap:8px;">
+            📂 Carregar ROM do Celular/PC
+            <input type="file" id="custom-rom-input" style="display:none;" onchange="carregarRomLocal(event)" />
+          </label>
+        </div>
+
+        <h3>Catálogo de Jogos:</h3>
+        <div class="file-grid" id="games-catalog"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const catalogData = [
+      { id: 1, nome: "Super Mario World", sistema: "snes", sysName: "SNES", core: "snes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 2, nome: "Super Mario Bros", sistema: "nes", sysName: "NES", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 3, nome: "Space Invaders", sistema: "nes", sysName: "NES", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 4, nome: "Sonic the Hedgehog", sistema: "sega", sysName: "SEGA Genesis", core: "segaMD", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 5, nome: "Pokemon FireRed", sistema: "gba", sysName: "Game Boy Advance", core: "gba", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 6, nome: "The Legend of Zelda", sistema: "nes", sysName: "NES", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 7, nome: "Donkey Kong Country", sistema: "snes", sysName: "SNES", core: "snes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 8, nome: "Super Mario 64", sistema: "n64", sysName: "Nintendo 64", core: "n64", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" }
+    ];
+
+    let platFiltroAtual = 'todos';
+    let arquivosSalvos = [];
+
+    function abrirModalLogin() {
+      document.getElementById('modal-login').style.display = 'flex';
+    }
+
+    function fecharModalLogin() {
+      document.getElementById('modal-login').style.display = 'none';
+    }
+
+    function fazerLoginEmail() {
+      const email = document.getElementById('input-email').value;
+      if (email.trim() !== "") {
+        document.getElementById('user-name').innerText = email.split('@')[0];
+        document.getElementById('account-type').innerText = "Conta Conectada";
+        document.getElementById('user-avatar').innerText = "✉️";
+      } else {
+        document.getElementById('user-name').innerText = "Usuário";
+        document.getElementById('account-type').innerText = "Acesso Livre";
+        document.getElementById('user-avatar').innerText = "👤";
+      }
+      fecharModalLogin();
+    }
+
+    function fazerLogin(tipo) {
+      if(tipo === 'microsoft') {
+        const msEmail = prompt("Digite seu e-mail da Microsoft:", "usuario@outlook.com");
+        if(msEmail) {
+          document.getElementById('user-name').innerText = msEmail.split('@')[0];
+          document.getElementById('account-type').innerText = "Microsoft Conectada";
+          document.getElementById('user-avatar').innerText = "🟦";
+        } else return;
+      }
+      fecharModalLogin();
+    }
+
+    // PLAYBOX STORE
+    function renderizarJogos() {
+      const grid = document.getElementById('games-catalog');
+      const termo = document.getElementById('game-search').value.toLowerCase();
+      grid.innerHTML = '';
+
+      const filtrados = catalogData.filter(j => {
+        const batePlataforma = platFiltroAtual === 'todos' || j.sistema === platFiltroAtual;
+        const bateNome = j.nome.toLowerCase().includes(termo);
+        return batePlataforma && bateNome;
+      });
+
+      if(filtrados.length === 0) {
+        grid.innerHTML = '<p style="color:var(--text-sub); grid-column: 1/-1;">Nenhum jogo encontrado.</p>';
+        return;
+      }
+
+      filtrados.forEach(j => {
+        const card = document.createElement('div');
+        card.className = 'file-card';
+        card.innerHTML = `
+          <h3>🎮 ${j.nome}</h3>
+          <small style="color:var(--text-sub);">${j.sysName}</small>
+          <button class="btn-apple" style="margin-top:10px;" onclick="executarEmulador('${j.core}', '${j.url}', '${j.nome}')">▶️ Jogar</button>
+        `;
+        grid.appendChild(card);
+    
