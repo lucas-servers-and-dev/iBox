@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>BoxCloud & PlayBox Universal Games</title>
+  <title>BoxCloud & PlayBox + DuoTwister / DuoSocial (Idiomas)</title>
   <style>
     :root {
       --glass-bg: rgba(255, 255, 255, 0.12);
@@ -12,21 +12,21 @@
       --glass-blur: 30px;
       --text-main: #ffffff;
       --text-sub: rgba(255, 255, 255, 0.75);
-      --accent: #007aff;
+      --accent: #58cc02; /* Verde clássico estilo Duolingo */
       --green: #10b981;
-      --gold: #f59e0b;
+      --gold: #ffc800; /* Amarelo Coroa/Duolingo */
       --ms-color: #00a4ef;
-      --theme-bg: #0f0c20;
-      --shape1-color: #7928ca;
-      --shape2-color: #0070f3;
+      --theme-bg: #131f24; /* Fundo escuro moderno estilo Duo */
+      --shape1-color: #58cc02;
+      --shape2-color: #1cb0f6;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: var(--theme-bg); color: var(--text-main); min-height: 100vh; overflow-x: hidden; position: relative; transition: background 0.3s; }
 
     .bg-shape { position: fixed; border-radius: 50%; filter: blur(90px); z-index: 0; pointer-events: none !important; }
-    .shape1 { width: 300px; height: 300px; background: var(--shape1-color); top: -50px; left: -50px; transition: background 0.3s; }
-    .shape2 { width: 300px; height: 300px; background: var(--shape2-color); bottom: -50px; right: -50px; transition: background 0.3s; }
+    .shape1 { width: 300px; height: 300px; background: var(--shape1-color); top: -50px; left: -50px; opacity: 0.3; transition: background 0.3s; }
+    .shape2 { width: 300px; height: 300px; background: var(--shape2-color); bottom: -50px; right: -50px; opacity: 0.3; transition: background 0.3s; }
 
     /* Modal de Login */
     .modal-overlay {
@@ -45,10 +45,9 @@
 
     .btn-apple {
       background: var(--accent); color: white; border: none; padding: 12px 18px; border-radius: 14px;
-      font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 10px; transition: 0.2s; position: relative; z-index: 10;
+      font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 10px; transition: 0.2s; position: relative; z-index: 10;
     }
     .btn-apple:active { transform: scale(0.98); }
-    .btn-ms { background: #2f2f2f; border: 1px solid var(--ms-color); color: white; }
     .btn-guest { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); }
 
     .divider { display: flex; align-items: center; text-align: center; color: var(--text-sub); font-size: 0.8rem; margin: 10px 0 15px 0; }
@@ -66,17 +65,16 @@
 
     .user-profile-box {
       display: flex; align-items: center; gap: 12px; background: rgba(0, 0, 0, 0.25);
-      padding: 12px; border-radius: 16px; border: 1px solid var(--glass-border);
+      padding: 12px; border-radius: 16px; border: 1px solid var(--glass-border); cursor: pointer;
     }
 
-    /* Sistema de Molduras de Avatar */
     .avatar-wrapper { position: relative; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; }
-    .avatar-img { width: 42px; height: 42px; border-radius: 50%; background: #333; display:flex; justify-content:center; align-items:center; font-size:1.3rem; z-index: 2; }
+    .avatar-img { width: 42px; height: 42px; border-radius: 50%; background: #333; display:flex; justify-content:center; align-items:center; font-size:1.4rem; z-index: 2; overflow:hidden; }
     
     .moldura-padrao { position: absolute; inset: 0; border-radius: 50%; border: 3px solid transparent; z-index: 3; pointer-events: none; }
-    .moldura-ouro { border-color: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.6); }
-    .moldura-diamante { border-color: #00ffff; box-shadow: 0 0 12px rgba(0, 255, 255, 0.8); }
-    .moldura-neon { border-color: #ff007f; box-shadow: 0 0 15px rgba(255, 0, 127, 1); }
+    .moldura-ouro { border-color: var(--gold); box-shadow: 0 0 10px rgba(255, 200, 0, 0.6); }
+    .moldura-diamante { border-color: #1cb0f6; box-shadow: 0 0 12px rgba(28, 176, 246, 0.8); }
+    .moldura-neon { border-color: #ff4b4b; box-shadow: 0 0 15px rgba(255, 75, 75, 1); }
 
     nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; flex-wrap: nowrap; }
     @media (min-width: 850px) { nav { flex-direction: column; } }
@@ -103,6 +101,14 @@
     .pill-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
     .pill-btn.active { background: var(--accent); border-color: var(--accent); }
 
+    /* Notificação de Conquista / Estilo Duo */
+    #achievement-popup {
+      position: fixed; bottom: 20px; right: 20px; background: rgba(19, 31, 36, 0.95);
+      border: 2px solid var(--gold); border-radius: 16px; padding: 15px; display: none;
+      align-items: center; gap: 12px; z-index: 1000000; backdrop-filter: blur(20px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-width: 320px;
+    }
+
     /* Emulador Tela Cheia */
     #emulator-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 100000; flex-direction: column; align-items: center; justify-content: flex-start; }
     #emulator-screen header { width: 100%; background: #111; padding: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
@@ -114,26 +120,30 @@
   <div class="bg-shape shape1"></div>
   <div class="bg-shape shape2"></div>
 
-  <!-- MODAL DE LOGIN -->
+  <!-- NOTIFICAÇÃO -->
+  <div id="achievement-popup">
+    <div style="font-size: 2rem;">🔥</div>
+    <div>
+      <div style="font-size:0.75rem; color:var(--gold); font-weight:bold;">META LINGUÍSTICA ATINGIDA!</div>
+      <div id="ach-title" style="font-size:0.95rem; font-weight:bold;">Ofensiva de Prática</div>
+      <div id="ach-reward" style="font-size:0.75rem; color:var(--text-sub);">Recompensa: +50 XP e Moldura Diamante</div>
+    </div>
+  </div>
+
+  <!-- MODAL LOGIN -->
   <div id="modal-login" class="modal-overlay">
     <div class="glass-card">
       <button type="button" class="close-modal-btn" onclick="fecharModalLogin()">✖</button>
-      <h2 style="margin-bottom:8px;">📦 BoxCloud Login</h2>
-      <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Digite qualquer e-mail e senha para entrar.</p>
+      <h2 style="margin-bottom:8px;">🦉 BoxCloud & Idiomas</h2>
+      <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Entre para salvar seu progresso de estudos.</p>
 
       <div>
         <input type="email" id="input-email" class="glass-input" placeholder="Seu e-mail" />
         <input type="password" id="input-pass" class="glass-input" placeholder="Sua senha" />
-        <button type="button" class="btn-apple" style="background:var(--green);" onclick="fazerLoginEmail()">✉️ Entrar com E-mail</button>
+        <button type="button" class="btn-apple" onclick="fazerLoginEmail()">✉️ Entrar com E-mail</button>
       </div>
 
-      <div class="divider">ou continue com</div>
-      
-      <button type="button" class="btn-apple btn-ms" onclick="fazerLogin('microsoft')">
-        <svg width="18" height="18" viewBox="0 0 23 23"><path fill="#f35325" d="M1 1h10v10H1z"/><path fill="#81bc06" d="M12 1h10v10H1z"/><path fill="#05a6f0" d="M1 12h10v10H1z"/><path fill="#ffba08" d="M12 12h10v10H1z"/></svg>
-        Entrar com Microsoft
-      </button>
-
+      <div class="divider">ou</div>
       <button type="button" class="btn-apple btn-guest" onclick="fecharModalLogin()">👤 Continuar como Convidado</button>
     </div>
   </div>
@@ -150,219 +160,158 @@
   <!-- APP PRINCIPAL -->
   <div id="app">
     <aside>
-      <div style="font-weight:800; font-size:1.3rem;">📦 BoxCloud</div>
+      <div style="font-weight:800; font-size:1.3rem; color:var(--accent);">🦉 BoxCloud Language</div>
 
-      <div class="user-profile-box">
+      <div class="user-profile-box" onclick="switchTab('custom', document.getElementById('btn-tab-custom'))">
         <div class="avatar-wrapper">
           <div class="moldura-padrao moldura-diamante" id="user-moldura"></div>
-          <div class="avatar-img" id="user-avatar">👤</div>
+          <div class="avatar-img" id="user-avatar">🦉</div>
         </div>
         <div>
-          <div style="font-weight:bold; font-size:0.95rem;" id="user-name">Usuário</div>
-          <div style="font-size:0.75rem; color:var(--gold);" id="user-title">🌟 Jogador Iniciante</div>
-          <div style="font-size:0.7rem; color:var(--text-sub);" id="user-level">Nível 1 (0 XP)</div>
+          <div style="font-weight:bold; font-size:0.95rem;" id="user-name">Estudante</div>
+          <div style="font-size:0.75rem; color:var(--gold);" id="user-title">🔥 7 Dias de Ofensiva</div>
+          <div style="font-size:0.7rem; color:var(--text-sub);" id="user-level">Nível 3 (350 XP)</div>
         </div>
       </div>
       
-      <div style="background: rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; padding:10px; border-radius:12px; font-size:0.8rem;">
-        ⚡ <strong>Sua Nuvem:</strong> 100 TB Ativos<br>
+      <div style="background: rgba(88,204,2,0.15); border:1px solid rgba(88,204,2,0.3); color:#89e219; padding:10px; border-radius:12px; font-size:0.8rem;">
+        🌍 <strong>Idioma Ativo:</strong> Inglês (Avançado)<br>
         <button type="button" onclick="abrirModalLogin()" style="background:none; border:none; color:white; font-size:0.75rem; text-decoration:underline; cursor:pointer; margin-top:4px;">Trocar de Conta</button>
       </div>
 
       <nav>
         <button type="button" class="nav-btn active" id="btn-tab-cloud" onclick="switchTab('cloud', this)">📁 Cloud & Upload</button>
         <button type="button" class="nav-btn" id="btn-tab-play" onclick="switchTab('play', this)">🎮 PlayBox Store</button>
-        <button type="button" class="nav-btn" id="btn-tab-custom" onclick="switchTab('custom', this)" style="color:#00ffff;">🎨 Temas & Aparência</button>
+        <button type="button" class="nav-btn" id="btn-tab-twister" onclick="switchTab('twister', this)" style="color:#ff4b4b;">🐦 BoxTwister (Idiomas)</button>
+        <button type="button" class="nav-btn" id="btn-tab-social" onclick="switchTab('social', this)" style="color:#1cb0f6;">💬 SocialBox (Chat Global)</button>
+        <button type="button" class="nav-btn" id="btn-tab-missions" onclick="switchTab('missions', this)" style="color:var(--gold);">🎯 Missões Diárias</button>
+        <button type="button" class="nav-btn" id="btn-tab-achievements" onclick="switchTab('achievements', this)" style="color:var(--accent);">🏆 Conquistas</button>
+        <button type="button" class="nav-btn" id="btn-tab-custom" onclick="switchTab('custom', this)" style="color:#ce82ff;">🎨 Temas & Memes</button>
       </nav>
     </aside>
 
     <main>
-      <!-- 1. CLOUD & UPLOAD -->
+      <!-- 1. CLOUD -->
       <section id="tab-cloud" class="tab-content active">
         <h2>Armazenamento na Nuvem (100 TB)</h2>
-        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Sincronizado automaticamente.</p>
-
+        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Guarde seus materiais de estudo e anotações.</p>
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:1.5rem;">
           <label class="btn-apple" style="width:auto; cursor:pointer;">
             📤 Enviar Arquivo Real
             <input type="file" style="display:none;" onchange="enviarArquivo(event)" />
           </label>
         </div>
-
         <h3>Arquivos Gravados:</h3>
         <div class="file-grid" id="file-list"></div>
       </section>
 
-      <!-- 2. PLAYBOX STORE -->
+      <!-- 2. PLAYBOX STORE COM FILTROS DE CONSOLE -->
       <section id="tab-play" class="tab-content">
-        <h2>PlayBox Store 🎮</h2>
+        <h2>PlayBox Store 🎮 (Com Conquistas)</h2>
+        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Filtre por console e jogue enquanto ganha XP para o seu perfil de idiomas.</p>
+
         <div class="store-controls">
-          <input type="text" id="game-search" class="glass-input" placeholder="🔍 Buscar jogo..." oninput="filtrarJogos()" style="margin-bottom:0;" />
+          <input type="text" id="game-search" class="glass-input" placeholder="🔍 Buscar jogo ou console..." oninput="renderizarJogos()" style="margin-bottom:0;" />
           <div class="platform-pills">
             <button type="button" class="pill-btn active" onclick="filtrarPlataforma('todos', this)">Todos</button>
-            <button type="button" class="pill-btn" onclick="filtrarPlataforma('snes', this)">SNES</button>
+            <button type="button" class="pill-btn" onclick="filtrarPlataforma('snes', this)">Super Nintendo</button>
             <button type="button" class="pill-btn" onclick="filtrarPlataforma('nes', this)">NES</button>
+            <button type="button" class="pill-btn" onclick="filtrarPlataforma('gba', this)">GBA</button>
+            <button type="button" class="pill-btn" onclick="filtrarPlataforma('sega', this)">SEGA</button>
+            <button type="button" class="pill-btn" onclick="filtrarPlataforma('n64', this)">Nintendo 64</button>
           </div>
         </div>
+
         <div class="file-grid" id="games-catalog"></div>
       </section>
 
-      <!-- 3. TEMAS, VIDRO FOSCO E MOLDURAS -->
-      <section id="tab-custom" class="tab-content">
-        <h2>Personalização de Tema e Aparência 🎨</h2>
-        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Escolha o tema da página, ajuste o vidro fosco e personalize seu perfil.</p>
+      <!-- 3. BOXTWISTER (ESTILO DUOLINGO DE LÍNGUAS) -->
+      <section id="tab-twister" class="tab-content">
+        <h2>🐦 BoxTwister Language Feed</h2>
+        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Pratique o idioma publicando frases, tirando dúvidas de vocabulário ou corrigindo outros estudantes!</p>
+        
+        <div class="file-card" style="background:rgba(255,255,255,0.05); margin-bottom:15px;">
+          <textarea id="twister-post-text" class="glass-input" placeholder="Escreva algo no idioma que você está estudando (ex: 'I am learning Spanish today!')..." style="resize:none; height:80px; margin-bottom:8px;"></textarea>
+          <button type="button" class="btn-apple" style="width:auto; padding:8px 16px;" onclick="publicarTwister()">Twistar Frase 🦉</button>
+        </div>
 
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-          <div class="file-card" style="background:rgba(255,255,255,0.05);">
-            <h3>🌌 Tema de Página</h3>
-            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-              <button type="button" class="btn-apple" style="width:auto; background:#0f0c20;" onclick="mudarTemaPagina('#0f0c20', '#7928ca', '#0070f3')">Roxo Espacial</button>
-              <button type="button" class="btn-apple" style="width:auto; background:#091921;" onclick="mudarTemaPagina('#091921', '#00bcd4', '#004aad')">Azul Cyber</button>
-              <button type="button" class="btn-apple" style="width:auto; background:#0a120a;" onclick="mudarTemaPagina('#0a120a', '#10b981', '#059669')">Verde Hacker</button>
-              <button type="button" class="btn-apple" style="width:auto; background:#121212;" onclick="mudarTemaPagina('#121212', '#333333', '#555555')">Dark Minimal</button>
-            </div>
+        <div id="twister-feed-list" style="display:flex; flex-direction:column; gap:12px;"></div>
+      </section>
+
+      <!-- 4. SOCIALBOX (CHAT GLOBAL DE IDIOMAS) -->
+      <section id="tab-social" class="tab-content">
+        <h2>💬 SocialBox Idiomas (Chat Global)</h2>
+        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Converse em inglês, espanhol, francês ou japonês com outros alunos em tempo real.</p>
+
+        <div class="file-card" style="display:flex; flex-direction:column; height:350px; background:rgba(0,0,0,0.2);">
+          <div id="chat-messages" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:5px; margin-bottom:10px;">
+            <div style="background:rgba(255,255,255,0.08); padding:8px 12px; border-radius:10px; font-size:0.85rem;"><strong>[Marie_FR]:</strong> Bonjour tout le monde ! Quelqu'un pratique l'anglais ?</div>
+            <div style="background:rgba(255,255,255,0.08); padding:8px 12px; border-radius:10px; font-size:0.85rem;"><strong>[John_US]:</strong> Hello! Yes, I am practicing Spanish and French here.</div>
           </div>
-
-          <div class="file-card" style="background:rgba(255,255,255,0.05);">
-            <h3>🔍 Intensidade do Vidro Fosco (Blur)</h3>
-            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-              <button type="button" class="btn-apple" style="width:auto; background:rgba(255,255,255,0.1);" onclick="mudarBlur('10px')">Leve (10px)</button>
-              <button type="button" class="btn-apple" style="width:auto; background:rgba(255,255,255,0.1);" onclick="mudarBlur('30px')">Padrão (30px)</button>
-              <button type="button" class="btn-apple" style="width:auto; background:rgba(255,255,255,0.1);" onclick="mudarBlur('60px')">Fosco Forte (60px)</button>
-            </div>
-          </div>
-
-          <div class="file-card" style="background:rgba(255,255,255,0.05);">
-            <h3>🛡️ Escolher Moldura e Título de Perfil</h3>
-            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-              <button type="button" class="btn-apple" style="width:auto; background:#f59e0b;" onclick="mudarMoldura('moldura-ouro', '👑 Mestre dos Games', 'Nível 50 (PRO)')">🏆 Ouro + Mestre</button>
-              <button type="button" class="btn-apple" style="width:auto; background:#00ffff; color:#000;" onclick="mudarMoldura('moldura-diamante', '💎 Lenda da Nuvem', 'Nível 99 (Elite)')">💎 Diamante + Lenda</button>
-              <button type="button" class="btn-apple" style="width:auto; background:#ff007f;" onclick="mudarMoldura('moldura-neon', '⚡ Cyber Punk', 'Nível 10 (Hacker)')">🔥 Neon + Cyber</button>
-            </div>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="chat-input" class="glass-input" placeholder="Digite sua mensagem no idioma de estudo..." style="margin-bottom:0;" />
+            <button type="button" class="btn-apple" style="width:auto; margin-bottom:0;" onclick="enviarMensagemChat()">Enviar</button>
           </div>
         </div>
       </section>
-    </main>
-  </div>
 
-  <script>
-    const catalogData = [
-      { id: 1, nome: "Super Mario World", sistema: "snes", sysName: "SNES", core: "snes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
-      { id: 2, nome: "Super Mario Bros", sistema: "nes", sysName: "NES", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" }
-    ];
-    let platFiltroAtual = 'todos';
-    let arquivosSalvos = [];
+      <!-- 5. MISSÕES DIÁRIAS (ESTILO DUOLINGO) -->
+      <section id="tab-missions" class="tab-content">
+        <h2>🎯 Missões Diárias de Idiomas</h2>
+        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Complete tarefas para subir de nível e desbloquear recompensas exclusivas.</p>
 
-    function abrirModalLogin() { document.getElementById('modal-login').style.display = 'flex'; }
-    function fecharModalLogin() { document.getElementById('modal-login').style.display = 'none'; }
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="file-card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <h3>📚 Publicar no BoxTwister</h3>
+              <p style="font-size:0.8rem; color:var(--text-sub);">Escreva 1 frase nova no feed de idiomas.</p>
+            </div>
+            <button type="button" class="btn-apple" style="width:auto; margin-bottom:0; background:var(--accent);" onclick="completarMissao(this, '+100 XP e Moldura Diamante')">Resgatar</button>
+          </div>
+          <div class="file-card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <h3>💬 Conversar no SocialBox</h3>
+              <p style="font-size:0.8rem; color:var(--text-sub);">Envie mensagem no chat global de línguas.</p>
+            </div>
+            <button type="button" class="btn-apple" style="width:auto; margin-bottom:0; background:var(--accent);" onclick="completarMissao(this, '+80 XP e Moldura Ouro')">Resgatar</button>
+          </div>
+        </div>
+      </section>
 
-    function fazerLoginEmail() {
-      const email = document.getElementById('input-email').value;
-      if (email.trim() !== "") {
-        document.getElementById('user-name').innerText = email.split('@')[0];
-        document.getElementById('user-avatar').innerText = "✉️";
-      }
-      fecharModalLogin();
-    }
+      <!-- 6. CONQUISTAS -->
+      <section id="tab-achievements" class="tab-content">
+        <h2>🏆 Área de Conquistas Linguísticas</h2>
+        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Troféus conquistados através do seu progresso de estudos e jogos.</p>
+        <div class="file-grid" id="achievements-grid">
+          <div class="file-card" style="border-color:var(--gold);">
+            <h3>🔥 7 Dias de Ofensiva</h3>
+            <p style="font-size:0.8rem; color:var(--text-sub);">Mantenha sua rotina de estudos ativa por uma semana inteira.</p>
+            <span style="color:var(--gold); font-size:0.75rem; font-weight:bold; display:inline-block; margin-top:8px;">✔ Desbloqueado</span>
+          </div>
+          <div class="file-card" style="opacity:0.6;">
+            <h3>🦉 Poliglota Mestre</h3>
+            <p style="font-size:0.8rem; color:var(--text-sub);">Interaja em 3 idiomas diferentes no SocialBox.</p>
+            <span style="color:var(--text-sub); font-size:0.75rem; display:inline-block; margin-top:8px;">🔒 Bloqueado</span>
+          </div>
+        </div>
+      </section>
 
-    function fazerLogin(tipo) {
-      if(tipo === 'microsoft') {
-        const msEmail = prompt("Digite seu e-mail da Microsoft:", "usuario@outlook.com");
-        if(msEmail) {
-          document.getElementById('user-name').innerText = msEmail.split('@')[0];
-          document.getElementById('user-avatar').innerText = "🟦";
-        }
-      }
-      fecharModalLogin();
-    }
+      <!-- 7. TEMAS E AVATARES DE MEMES -->
+      <section id="tab-custom" class="tab-content">
+        <h2>🎨 Temas, Desfoque & Avatares de Memes</h2>
+        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Escolha seu avatar favorito e personalize a aparência do seu app.</p>
 
-    // CUSTOMIZAÇÃO DE TEMA E APARÊNCIA
-    function mudarTemaPagina(corFundo, corShape1, corShape2) {
-      document.documentElement.style.setProperty('--theme-bg', corFundo);
-      document.documentElement.style.setProperty('--shape1-color', corShape1);
-      document.documentElement.style.setProperty('--shape2-color', corShape2);
-    }
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+          <div class="file-card" style="background:rgba(255,255,255,0.05);">
+            <h3>🖼️ Avatares de Memes Famosos</h3>
+            <div style="display:flex; gap:15px; margin-top:10px; flex-wrap:wrap;">
+              <div onclick="mudarAvatar('🦉')" style="cursor:pointer; font-size:2rem; background:rgba(255,255,255,0.1); padding:8px; border-radius:12px;" title="Coruja Duo">🦉</div>
+              <div onclick="mudarAvatar('🍄')" style="cursor:pointer; font-size:2rem; background:rgba(255,255,255,0.1); padding:8px; border-radius:12px;" title="Mario">🍄</div>
+              <div onclick="mudarAvatar('💀')" style="cursor:pointer; font-size:2rem; background:rgba(255,255,255,0.1); padding:8px; border-radius:12px;" title="Dark Souls">💀</div>
+              <div onclick="mudarAvatar('💨')" style="cursor:pointer; font-size:2rem; background:rgba(255,255,255,0.1); padding:8px; border-radius:12px;" title="Sanic">💨</div>
+              <div onclick="mudarAvatar('🦖')" style="cursor:pointer; font-size:2rem; background:rgba(255,255,255,0.1); padding:8px; border-radius:12px;" title="Dino">🦖</div>
+            </div>
+          </div>
 
-    function mudarBlur(valorBlur) {
-      document.documentElement.style.setProperty('--glass-blur', valorBlur);
-    }
-
-    function mudarMoldura(classeMoldura, novoTitulo, novoNivel) {
-      const molduraEl = document.getElementById('user-moldura');
-      molduraEl.className = `moldura-padrao ${classeMoldura}`;
-      document.getElementById('user-title').innerText = novoTitulo;
-      document.getElementById('user-level').innerText = novoNivel;
-    }
-
-    // LOJA E EMULADOR
-    function renderizarJogos() {
-      const grid = document.getElementById('games-catalog');
-      grid.innerHTML = '';
-      catalogData.forEach(j => {
-        const card = document.createElement('div');
-        card.className = 'file-card';
-        card.innerHTML = `<h3>🎮 ${j.nome}</h3><button type="button" class="btn-apple" style="margin-top:10px;" onclick="executarEmulador('${j.core}', '${j.url}', '${j.nome}')">▶️ Jogar</button>`;
-        grid.appendChild(card);
-      });
-    }
-
-    function filtrarPlataforma(plat, btn) {
-      platFiltroAtual = plat;
-      document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-      if(btn) btn.classList.add('active');
-    }
-
-    function filtrarJogos() { renderizarJogos(); }
-
-    function executarEmulador(sistema, romUrl, titulo) {
-      document.getElementById('emulator-screen').style.display = 'flex';
-      document.getElementById('game-title-display').innerText = `🎮 ${titulo}`;
-      const container = document.getElementById('emulator-container');
-      container.innerHTML = '<div id="game"></div>';
-      window.EJS_player = '#game';
-      window.EJS_core = sistema;
-      window.EJS_gameUrl = romUrl;
-      window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
-      const script = document.createElement('script');
-      script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
-      container.appendChild(script);
-    }
-
-    function fecharEmulador() {
-      document.getElementById('emulator-screen').style.display = 'none';
-      document.getElementById('emulator-container').innerHTML = '';
-    }
-
-    function switchTab(tabName, btn) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(`tab-${tabName}`).classList.add('active');
-      if(btn) btn.classList.add('active');
-    }
-
-    function enviarArquivo(e) {
-      const file = e.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        arquivosSalvos.push({ nome: file.name, data: evt.target.result });
-        renderizarArquivos();
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function renderizarArquivos() {
-      const list = document.getElementById('file-list');
-      list.innerHTML = arquivosSalvos.length === 0 ? '<p style="color:var(--text-sub);">Nenhum arquivo enviado.</p>' : '';
-      arquivosSalvos.forEach(f => {
-        const div = document.createElement('div');
-        div.className = 'file-card';
-        div.innerHTML = `<strong>📄 ${f.nome}</strong><br><a href="${f.data}" download="${f.nome}" style="color:var(--green); font-size:0.8rem;">Baixar</a>`;
-        list.appendChild(div);
-      });
-    }
-
-    renderizarJogos();
-    renderizarArquivos();
-  </script>
-</body>                                                                                                                                                                                                  </html
+          <div class="file-card" style="background:rgba(255,255,255,0.05);">
+       
