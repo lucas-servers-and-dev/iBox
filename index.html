@@ -3,333 +3,365 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>BoxCloud & PlayBox + DuoTwister / DuoSocial (Mundo Retrô)</title>
+  <title>BoxCloud & PlayBox - BoxTwister Idiomas</title>
   <style>
     :root {
-      --glass-bg: rgba(255, 255, 255, 0.12);
-      --glass-bg-hover: rgba(255, 255, 255, 0.22);
-      --glass-border: rgba(255, 255, 255, 0.25);
-      --glass-blur: 30px;
-      --text-main: #ffffff;
-      --text-sub: rgba(255, 255, 255, 0.75);
-      --accent: #58cc02; /* Verde Duolingo */
-      --green: #10b981;
-      --gold: #ffc800; /* Amarelo Coroa/Duolingo */
-      --theme-bg: #131f24; 
-      --shape1-color: #58cc02;
-      --shape2-color: #1cb0f6;
+      --bg-main: #121212;
+      --card-bg: #1e1e1e;
+      --border-color: #333333;
+      --text-main: #e0e0e0;
+      --text-sub: #999999;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --lang-color: #10b981; /* Verde clássico para seções de idiomas */
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: var(--theme-bg); color: var(--text-main); min-height: 100vh; overflow-x: hidden; position: relative; transition: background 0.3s; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-    .bg-shape { position: fixed; border-radius: 50%; filter: blur(90px); z-index: 0; pointer-events: none !important; }
-    .shape1 { width: 300px; height: 300px; background: var(--shape1-color); top: -50px; left: -50px; opacity: 0.3; transition: background 0.3s; }
-    .shape2 { width: 300px; height: 300px; background: var(--shape2-color); bottom: -50px; right: -50px; opacity: 0.3; transition: background 0.3s; }
-
-    /* Modal de Login */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(15px); display: none; justify-content: center; align-items: center; z-index: 99999; padding: 20px;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9);
+      display: none; justify-content: center; align-items: center; z-index: 99999; padding: 20px;
     }
 
-    .glass-card {
-      background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur));
-      border: 1px solid var(--glass-border); border-radius: 24px; padding: 2rem; width: 100%; max-width: 400px; text-align: center;
-      position: relative; z-index: 100000;
+    .retro-box {
+      background: var(--card-bg); border: 2px solid var(--border-color);
+      border-radius: 8px; padding: 2rem; width: 100%; max-width: 400px; text-align: center;
     }
 
-    .close-modal-btn { position: absolute; top: 12px; right: 16px; background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
-    .glass-input { width: 100%; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; color: white; font-size: 0.95rem; outline: none; margin-bottom: 0.8rem; }
+    .close-btn { float: right; background: none; border: none; color: #fff; font-size: 1rem; cursor: pointer; }
+    .retro-input { width: 100%; background: #111; border: 1px solid var(--border-color); padding: 10px; color: white; font-size: 0.9rem; margin-bottom: 10px; border-radius: 4px; outline: none; }
 
-    .btn-apple {
-      background: var(--accent); color: white; border: none; padding: 12px 18px; border-radius: 14px;
-      font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 10px; transition: 0.2s;
+    .btn-retro {
+      background: var(--accent); color: white; border: none; padding: 10px 16px;
+      font-weight: bold; cursor: pointer; width: 100%; border-radius: 4px; font-size: 0.9rem; transition: 0.2s;
     }
-    .btn-apple:active { transform: scale(0.98); }
-    .btn-guest { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); }
+    .btn-retro:hover { background: var(--accent-hover); }
+    .btn-lang { background: var(--lang-color); }
+    .btn-lang:hover { background: #059669; }
+    .btn-guest { background: #333; margin-top: 8px; }
 
-    .divider { display: flex; align-items: center; text-align: center; color: var(--text-sub); font-size: 0.8rem; margin: 10px 0 15px 0; }
-    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--glass-border); }
-    .divider::before { margin-right: .5em; } .divider::after { margin-left: .5em; }
-
-    /* Layout Principal */
-    #app { display: flex; flex-direction: column; width: 100%; min-height: 100vh; z-index: 1; padding: 15px; gap: 15px; position: relative; }
-    @media (min-width: 850px) { #app { flex-direction: row; } aside { width: 320px; } }
+    #app { display: flex; flex-direction: column; width: 100%; min-height: 100vh; padding: 15px; gap: 15px; }
+    @media (min-width: 850px) { #app { flex-direction: row; } aside { width: 280px; } }
 
     aside {
-      background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border);
-      border-radius: 20px; padding: 1.2rem; display: flex; flex-direction: column; gap: 15px;
+      background: var(--card-bg); border: 2px solid var(--border-color);
+      border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: 15px;
     }
 
-    .user-profile-box {
-      display: flex; align-items: center; gap: 12px; background: rgba(0, 0, 0, 0.25);
-      padding: 12px; border-radius: 16px; border: 1px solid var(--glass-border); cursor: pointer;
-    }
+    .user-box { display: flex; align-items: center; gap: 10px; background: #111; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); }
+    .user-avatar { width: 38px; height: 38px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
 
-    .avatar-wrapper { position: relative; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; }
-    .avatar-img { width: 42px; height: 42px; border-radius: 50%; background: #333; display:flex; justify-content:center; align-items:center; font-size:1.4rem; z-index: 2; overflow:hidden; }
-    
-    .moldura-padrao { position: absolute; inset: 0; border-radius: 50%; border: 3px solid transparent; z-index: 3; pointer-events: none; }
-    .moldura-ouro { border-color: var(--gold); box-shadow: 0 0 10px rgba(255, 200, 0, 0.6); }
-    .moldura-diamante { border-color: #1cb0f6; box-shadow: 0 0 12px rgba(28, 176, 246, 0.8); }
-
-    nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; flex-wrap: nowrap; }
+    nav { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 5px; flex-wrap: nowrap; }
     @media (min-width: 850px) { nav { flex-direction: column; } }
 
     .nav-btn {
-      background: transparent; border: none; color: var(--text-sub); padding: 12px 16px;
-      border-radius: 14px; font-size: 0.95rem; cursor: pointer; white-space: nowrap; text-align: left;
+      background: #111; border: 1px solid var(--border-color); color: var(--text-sub); padding: 10px 14px;
+      border-radius: 4px; font-size: 0.85rem; cursor: pointer; text-align: left; white-space: nowrap;
     }
-    .nav-btn.active { background: var(--glass-bg-hover); color: white; border: 1px solid rgba(255, 255, 255, 0.2); }
+    .nav-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
     main {
-      flex: 1; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border);
-      border-radius: 20px; padding: 1.5rem; overflow-y: auto;
+      flex: 1; background: var(--card-bg); border: 2px solid var(--border-color);
+      border-radius: 8px; padding: 1.5rem; overflow-y: auto;
     }
 
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; }
-    .file-card { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 12px; border-radius: 14px; word-break: break-all; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; }
+    .card { background: #111; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; }
 
-    .store-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-    .platform-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
-    .pill-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
-    .pill-btn.active { background: var(--accent); border-color: var(--accent); }
+    .filters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 5px; margin-top: 10px; }
+    .pill { background: #111; border: 1px solid var(--border-color); color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
+    .pill.active { background: var(--accent); border-color: var(--accent); }
 
-    /* Pop-up de Conquista / Meta */
-    #achievement-popup {
-      position: fixed; bottom: 20px; right: 20px; background: rgba(19, 31, 36, 0.95);
-      border: 2px solid var(--gold); border-radius: 16px; padding: 15px; display: none;
-      align-items: center; gap: 12px; z-index: 1000000; backdrop-filter: blur(20px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-width: 320px;
-    }
-
-    /* Emulador Tela Cheia */
-    #emulator-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 100000; flex-direction: column; align-items: center; justify-content: flex-start; }
+    #emulator-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 100000; flex-direction: column; }
     #emulator-screen header { width: 100%; background: #111; padding: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
     #emulator-container { width: 100%; flex: 1; position: relative; }
   </style>
 </head>
 <body>
 
-  <div class="bg-shape shape1"></div>
-  <div class="bg-shape shape2"></div>
-
-  <!-- NOTIFICAÇÃO -->
-  <div id="achievement-popup">
-    <div style="font-size: 2rem;">🏆</div>
-    <div>
-      <div style="font-size:0.75rem; color:var(--gold); font-weight:bold;">MISSÃO CONCLUÍDA!</div>
-      <div id="ach-title" style="font-size:0.95rem; font-weight:bold;">Mestre Retrô</div>
-      <div id="ach-reward" style="font-size:0.75rem; color:var(--text-sub);">Recompensa: +100 XP</div>
-    </div>
-  </div>
-
   <!-- MODAL LOGIN -->
   <div id="modal-login" class="modal-overlay">
-    <div class="glass-card">
-      <button type="button" class="close-modal-btn" onclick="fecharModalLogin()">✖</button>
-      <h2 style="margin-bottom:8px;">🦉 BoxCloud & Retrô</h2>
-      <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Entre para salvar seu XP e missões mundiais.</p>
-      <input type="email" id="input-email" class="glass-input" placeholder="Seu e-mail" />
-      <input type="password" id="input-pass" class="glass-input" placeholder="Sua senha" />
-      <button type="button" class="btn-apple" onclick="fazerLoginEmail()">✉️ Entrar</button>
-      <div class="divider">ou</div>
-      <button type="button" class="btn-apple btn-guest" onclick="fecharModalLogin()">👤 Convidado</button>
+    <div class="retro-box">
+      <button type="button" class="close-btn" onclick="fecharLogin()">[X]</button>
+      <h3 style="margin-bottom:10px;">Acesso ao Sistema</h3>
+      <input type="email" id="login-email" class="retro-input" placeholder="Usuário" />
+      <input type="password" id="login-pass" class="retro-input" placeholder="Senha" />
+      <button type="button" class="btn-retro" onclick="fazerLogin()">Entrar</button>
+      <button type="button" class="btn-retro btn-guest" onclick="fecharLogin()">Entrar como Convidado</button>
     </div>
   </div>
 
-  <!-- EMULADOR -->
+  <!-- EMULADOR TELA CHEIA -->
   <div id="emulator-screen">
     <header>
-      <span id="game-title-display" style="font-weight:bold; font-size:0.9rem;">🎮 Emulador Global</span>
-      <button type="button" onclick="fecharEmulador()" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; cursor:pointer;">✖ Sair do Jogo</button>
+      <span id="emulator-title" style="font-weight:bold; font-size:0.9rem;">Emulador Retrô</span>
+      <button type="button" onclick="fecharEmulador()" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">[Sair]</button>
     </header>
     <div id="emulator-container"></div>
   </div>
 
-  <!-- APP PRINCIPAL -->
+  <!-- APLICATIVO -->
   <div id="app">
     <aside>
-      <div style="font-weight:800; font-size:1.3rem; color:var(--accent);">🦉 BoxCloud World</div>
+      <div style="font-weight:bold; font-size:1.1rem; color:var(--accent);">RETROBOX SYSTEM</div>
 
-      <div class="user-profile-box" onclick="switchTab('custom', document.getElementById('btn-tab-custom'))">
-        <div class="avatar-wrapper">
-          <div class="moldura-padrao moldura-diamante" id="user-moldura"></div>
-          <div class="avatar-img" id="user-avatar">🦉</div>
-        </div>
+      <div class="user-box" onclick="abrirLogin()" style="cursor:pointer;">
+        <div class="user-avatar" id="user-icon">🕹️</div>
         <div>
-          <div style="font-weight:bold; font-size:0.95rem;" id="user-name">Player</div>
-          <div style="font-size:0.75rem; color:var(--gold);" id="user-title">🔥 Ofensiva Ativa</div>
-          <div style="font-size:0.7rem; color:var(--text-sub);" id="user-level">Nível 5 (850 XP)</div>
+          <div style="font-weight:bold; font-size:0.9rem;" id="user-display">Convidado</div>
+          <div style="font-size:0.75rem; color:var(--text-sub);">Clique para logar</div>
         </div>
       </div>
 
       <nav>
-        <button type="button" class="nav-btn active" id="btn-tab-play" onclick="switchTab('play', this)">🎮 Catálogo Mundial (Jogos)</button>
-        <button type="button" class="nav-btn" id="btn-tab-twister" onclick="switchTab('twister', this)" style="color:#ff4b4b;">🐦 BoxTwister (Feed)</button>
-        <button type="button" class="nav-btn" id="btn-tab-social" onclick="switchTab('social', this)" style="color:#1cb0f6;">💬 SocialBox (Chat)</button>
-        <button type="button" class="nav-btn" id="btn-tab-missions" onclick="switchTab('missions', this)" style="color:var(--gold);">🎯 Missões Globais</button>
-        <button type="button" class="nav-btn" id="btn-tab-cloud" onclick="switchTab('cloud', this)">📁 Cloud</button>
-        <button type="button" class="nav-btn" id="btn-tab-custom" onclick="switchTab('custom', this)" style="color:#ce82ff;">🎨 Temas & Avatares</button>
+        <button type="button" class="nav-btn active" onclick="trocarAba('play', this)">🕹️ PlayBox (Jogos)</button>
+        <button type="button" class="nav-btn" onclick="trocarAba('twister', this)" style="color:#10b981;">💬 BoxTwister (Idiomas)</button>
+        <button type="button" class="nav-btn" onclick="trocarAba('social', this)">💬 SocialBox (Chat)</button>
+        <button type="button" class="nav-btn" onclick="trocarAba('cloud', this)">📁 Cloud Storage</button>
+        <button type="button" class="nav-btn" onclick="trocarAba('config', this)">⚙️ Configurações</button>
       </nav>
     </aside>
 
     <main>
-      <!-- 1. CATÁLOGO GLOBAL DE JOGOS -->
+      <!-- 1. PLAYBOX (JOGOS) -->
       <section id="tab-play" class="tab-content active">
-        <h2>Catálogo Mundial de Jogos Retrô 🎮</h2>
-        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Explore e jogue clássicos de todas as plataformas do mundo direto no navegador.</p>
+        <h2>Biblioteca de Jogos Clássicos</h2>
+        <p style="color:var(--text-sub); font-size:0.85rem; margin-top:5px;">Selecione um console e jogue títulos tradicionais direto no navegador.</p>
 
-        <div class="store-controls">
-          <input type="text" id="game-search" class="glass-input" placeholder="🔍 Pesquise qualquer jogo do mundo (Ex: Mario, Sonic, Zelda)..." oninput="renderizarJogos()" style="margin-bottom:0;" />
-          <div class="platform-pills">
-            <button type="button" class="pill-btn active" onclick="filtrarPlataforma('todos', this)">Todos</button>
-            <button type="button" class="pill-btn" onclick="filtrarPlataforma('nes', this)">NES (Nintendo)</button>
-            <button type="button" class="pill-btn" onclick="filtrarPlataforma('snes', this)">Super Nintendo</button>
-            <button type="button" class="pill-btn" onclick="filtrarPlataforma('sega', this)">Mega Drive / SEGA</button>
-            <button type="button" class="pill-btn" onclick="filtrarPlataforma('gba', this)">Game Boy Advance</button>
-            <button type="button" class="pill-btn" onclick="filtrarPlataforma('arcade', this)">Arcade / Fliperama</button>
+        <div style="margin-top:15px;">
+          <input type="text" id="game-search" class="retro-input" placeholder="Pesquisar jogo..." oninput="filtrarJogos()" />
+          <div class="filters">
+            <button type="button" class="pill active" onclick="mudarFiltro('todos', this)">Todos</button>
+            <button type="button" class="pill" onclick="mudarFiltro('nes', this)">NES</button>
+            <button type="button" class="pill" onclick="mudarFiltro('snes', this)">Super Nintendo</button>
+            <button type="button" class="pill" onclick="mudarFiltro('sega', this)">Mega Drive</button>
+            <button type="button" class="pill" onclick="mudarFiltro('arcade', this)">Arcade</button>
           </div>
         </div>
 
-        <div class="file-grid" id="games-catalog"></div>
+        <div class="grid" id="games-grid"></div>
       </section>
 
-      <!-- 2. BOXTWISTER -->
+      <!-- 2. BOXTWISTER (IDIOMAS) -->
       <section id="tab-twister" class="tab-content">
-        <h2>🐦 BoxTwister Feed Global</h2>
-        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Compartilhe suas pontuações e recordes com a comunidade mundial.</p>
-        <div class="file-card" style="background:rgba(255,255,255,0.05); margin-bottom:15px;">
-          <textarea id="twister-post-text" class="glass-input" placeholder="O que você está jogando ou estudando hoje?..." style="resize:none; height:80px; margin-bottom:8px;"></textarea>
-          <button type="button" class="btn-apple" style="width:auto; padding:8px 16px;" onclick="publicarTwister()">Twistar 🦉</button>
+        <h2>BoxTwister (Prática de Línguas)</h2>
+        <p style="color:var(--text-sub); font-size:0.85rem; margin-top:5px;">Publique frases, treine traduções e interaja no idioma que você está estudando.</p>
+        
+        <div class="card" style="margin-top:15px; border-color:var(--lang-color);">
+          <select id="lang-select" class="retro-input" style="margin-bottom:8px;">
+            <option value="Inglês">Idioma: Inglês (English)</option>
+            <option value="Espanhol">Idioma: Espanhol (Español)</option>
+            <option value="Francês">Idioma: Francês (Français)</option>
+            <option value="Japonês">Idioma: Japonês (日本語)</option>
+          </select>
+          <textarea id="twister-input" class="retro-input" placeholder="Escreva uma frase ou dúvida no idioma selecionado..." style="height:70px; resize:none;"></textarea>
+          <button type="button" class="btn-retro btn-lang" style="width:auto; padding:6px 12px;" onclick="publicarTwister()">Publicar Lição/Frase</button>
         </div>
-        <div id="twister-feed-list" style="display:flex; flex-direction:column; gap:12px;"></div>
+
+        <div id="twister-feed" style="display:flex; flex-direction:column; gap:10px; margin-top:15px;"></div>
       </section>
 
       <!-- 3. SOCIALBOX -->
       <section id="tab-social" class="tab-content">
-        <h2>💬 SocialBox Chat Global</h2>
-        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Converse com jogadores e estudantes do mundo inteiro.</p>
-        <div class="file-card" style="display:flex; flex-direction:column; height:350px; background:rgba(0,0,0,0.2);">
-          <div id="chat-messages" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:5px; margin-bottom:10px;">
-            <div style="background:rgba(255,255,255,0.08); padding:8px 12px; border-radius:10px; font-size:0.85rem;"><strong>[RetroGamer_99]:</strong> Alguém zerou Super Mario World hoje?</div>
+        <h2>SocialBox (Bate-Papo Global)</h2>
+        <p style="color:var(--text-sub); font-size:0.85rem; margin-top:5px;">Canal de conversação em tempo real.</p>
+
+        <div class="card" style="display:flex; flex-direction:column; height:320px; margin-top:15px; background:#111;">
+          <div id="chat-msgs" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:6px; font-size:0.85rem; padding-bottom:5px;">
+            <div style="background:#1e1e1e; padding:6px; border-radius:4px;"><strong>[Sistema]:</strong> Bem-vindo ao chat tradicional.</div>
           </div>
-          <div style="display:flex; gap:8px;">
-            <input type="text" id="chat-input" class="glass-input" placeholder="Digite sua mensagem..." style="margin-bottom:0;" />
-            <button type="button" class="btn-apple" style="width:auto; margin-bottom:0;" onclick="enviarMensagemChat()">Enviar</button>
+          <div style="display:flex; gap:6px; margin-top:10px;">
+            <input type="text" id="chat-txt" class="retro-input" placeholder="Mensagem..." style="margin-bottom:0;" />
+            <button type="button" class="btn-retro" style="width:auto;" onclick="enviarChat()">Enviar</button>
           </div>
         </div>
       </section>
 
-      <!-- 4. MISSÕES GLOBAIS -->
-      <section id="tab-missions" class="tab-content">
-        <h2>🎯 Missões Diárias do Mundo Retrô</h2>
-        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Complete os objetivos diários para subir de nível no estilo Duolingo.</p>
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <div class="file-card" style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <h3>🕹️ Jogar 1 Clássico Mundial</h3>
-              <p style="font-size:0.8rem; color:var(--text-sub);">Abra qualquer jogo do catálogo e jogue por alguns instantes.</p>
-            </div>
-            <button type="button" class="btn-apple" style="width:auto; margin-bottom:0; background:var(--accent);" onclick="completarMissao(this, '+150 XP e Moldura Ouro')">Resgatar</button>
-          </div>
-          <div class="file-card" style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <h3>🐦 Interagir no BoxTwister</h3>
-              <p style="font-size:0.8rem; color:var(--text-sub);">Faça uma postagem no feed global.</p>
-            </div>
-            <button type="button" class="btn-apple" style="width:auto; margin-bottom:0; background:var(--accent);" onclick="completarMissao(this, '+100 XP')">Resgatar</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 5. CLOUD -->
+      <!-- 4. CLOUD -->
       <section id="tab-cloud" class="tab-content">
-        <h2>Armazenamento Cloud</h2>
-        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Guarde seus saves de jogos e arquivos pessoais.</p>
-        <label class="btn-apple" style="width:auto; cursor:pointer;">
-          📤 Enviar Arquivo / ROM
-          <input type="file" style="display:none;" onchange="enviarArquivo(event)" />
+        <h2>Cloud Storage (Arquivos e Saves)</h2>
+        <p style="color:var(--text-sub); font-size:0.85rem; margin-top:5px;">Gerencie seus arquivos e ROMs.</p>
+        <label class="btn-retro" style="display:inline-block; width:auto; cursor:pointer; margin-top:15px;">
+          Carregar Arquivo
+          <input type="file" style="display:none;" onchange="subirArquivo(event)" />
         </label>
-        <div class="file-grid" id="file-list" style="margin-top:15px;"></div>
+        <div class="grid" id="cloud-grid"></div>
       </section>
 
-      <!-- 6. TEMAS E AVATARES -->
-      <section id="tab-custom" class="tab-content">
-        <h2>🎨 Temas & Memes</h2>
-        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Personalize sua experiência visual.</p>
-        <div class="file-card" style="background:rgba(255,255,255,0.05);">
-          <h3>🖼️ Avatares</h3>
-          <div style="display:flex; gap:15px; margin-top:10px;">
-            <div onclick="mudarAvatar('🦉')" style="cursor:pointer; font-size:2rem;">🦉</div>
-            <div onclick="mudarAvatar('🕹️')" style="cursor:pointer; font-size:2rem;">🕹️</div>
-            <div onclick="mudarAvatar('🔥')" style="cursor:pointer; font-size:2rem;">🔥</div>
-          </div>
+      <!-- 5. CONFIGURAÇÕES -->
+      <section id="tab-config" class="tab-content">
+        <h2>Configurações do Sistema</h2>
+        <p style="color:var(--text-sub); font-size:0.85rem; margin-top:5px;">Preferências da interface.</p>
+        <div class="card" style="margin-top:15px;">
+          <button type="button" class="btn-retro" style="background:#dc2626; width:auto;" onclick="limparDados()">Limpar Dados Locais</button>
         </div>
       </section>
     </main>
   </div>
 
   <script>
-    // Catálogo expansível com os maiores jogos clássicos mundiais
-    const catalogData = [
+    const databaseJogos = [
       { id: 1, nome: "Super Mario World", sistema: "snes", sysName: "Super Nintendo", core: "snes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
       { id: 2, nome: "Super Mario Bros", sistema: "nes", sysName: "Nintendo (NES)", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
-      { id: 3, nome: "Sonic the Hedgehog", sistema: "sega", sysName: "Mega Drive / SEGA", core: "segaMD", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
-      { id: 4, nome: "Pokémon FireRed", sistema: "gba", sysName: "Game Boy Advance", core: "gba", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
-      { id: 5, nome: "Pac-Man Arcade", sistema: "arcade", sysName: "Fliperama Clássico", core: "arcade", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
-      { id: 6, nome: "The Legend of Zelda", sistema: "nes", sysName: "Nintendo (NES)", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
-      { id: 7, nome: "Donkey Kong Country", sistema: "snes", sysName: "Super Nintendo", core: "snes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" }
+      { id: 3, nome: "Sonic the Hedgehog", sistema: "sega", sysName: "Mega Drive", core: "segaMD", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 4, nome: "Pac-Man", sistema: "arcade", sysName: "Arcade", core: "arcade", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" }
     ];
 
-    let platFiltroAtual = 'todos';
-    let arquivosSalvos = [];
-    let postsTwister = [{ usuario: "DuoPlayer", texto: "Joguei Super Mario Bros hoje e conquistei novas metas! 🚀" }];
+    let filtroAtual = 'todos';
+    let posts = [{ autor: "Prof_Global", idioma: "Inglês", texto: "Hello everyone! Remember to practice vocabulary every day." }];
+    let arquivosCloud = [];
 
-    function abrirModalLogin() { document.getElementById('modal-login').style.display = 'flex'; }
-    function fecharModalLogin() { document.getElementById('modal-login').style.display = 'none'; }
-    function fazerLoginEmail() {
-      const email = document.getElementById('input-email').value;
-      if (email.trim() !== "") document.getElementById('user-name').innerText = email.split('@')[0];
-      fecharModalLogin();
+    function abrirLogin() { document.getElementById('modal-login').style.display = 'flex'; }
+    function fecharLogin() { document.getElementById('modal-login').style.display = 'none'; }
+    function fazerLogin() {
+      const usr = document.getElementById('login-email').value;
+      if(usr) {
+        document.getElementById('user-display').innerText = usr.split('@')[0];
+        document.getElementById('user-icon').innerText = '👤';
+      }
+      fecharLogin();
     }
-    function mudarAvatar(emoji) { document.getElementById('user-avatar').innerText = emoji; }
-    function mudarMoldura(classe) { document.getElementById('user-moldura').className = `moldura-padrao ${classe}`; }
+
+    function trocarAba(abaId, btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`tab-${abaId}`).classList.add('active');
+      if(btn) btn.classList.add('active');
+    }
 
     function renderizarJogos() {
-      const grid = document.getElementById('games-catalog');
+      const grid = document.getElementById('games-grid');
       const termo = document.getElementById('game-search').value.toLowerCase();
       grid.innerHTML = '';
 
-      const filtrados = catalogData.filter(j => {
-        const batePlat = platFiltroAtual === 'todos' || j.sistema === platFiltroAtual;
-        const bateNome = j.nome.toLowerCase().includes(termo) || j.sysName.toLowerCase().includes(termo);
-        return batePlat && bateNome;
+      const filtrados = databaseJogos.filter(j => {
+        const matchFiltro = filtroAtual === 'todos' || j.sistema === filtroAtual;
+        const matchNome = j.nome.toLowerCase().includes(termo);
+        return matchFiltro && matchNome;
       });
 
       if(filtrados.length === 0) {
-        grid.innerHTML = '<p style="color:var(--text-sub); grid-column: 1/-1;">Nenhum jogo encontrado no mundo.</p>';
+        grid.innerHTML = '<p style="color:var(--text-sub); grid-column:1/-1;">Nenhum item encontrado.</p>';
         return;
       }
 
       filtrados.forEach(j => {
-        const card = document.createElement('div');
-        card.className = 'file-card';
-        card.innerHTML = `
-          <h3>🎮 ${j.nome}</h3>
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <strong>${j.nome}</strong><br>
           <small style="color:var(--text-sub);">${j.sysName}</small>
           <div style="margin-top:10px;">
-            <button type="button" class="btn-apple" style="padding:6px 10px; font-size:0.8rem; margin-bottom:0;" onclick="executarEmulador('${j.core}', '${j.url}', '${j.nome}')">▶️ Jogar Agora</button>
+            <button type="button" class="btn-retro" style="padding:6px; font-size:0.8rem;" onclick="iniciarJogo('${j.core}', '${j.url}', '${j.nome}')">Iniciar</button>
           </div>
         `;
-        grid.appendChild(card);
+        grid.appendChild(div);
       });
     }
 
-    function filtrarPlataforma(plat, btn) {
-      platFiltroAtual = plat;
-      document.
+    function mudarFiltro(filt, btn) {
+      filtroAtual = filt;
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      renderizarJogos();
+    }
+
+    function iniciarJogo(core, url, titulo) {
+      document.getElementById('emulator-screen').style.display = 'flex';
+      document.getElementById('emulator-title').innerText = titulo;
+      const container = document.getElementById('emulator-container');
+      container.innerHTML = '<div id="game"></div>';
+      window.EJS_player = '#game';
+      window.EJS_core = core;
+      window.EJS_gameUrl = url;
+      window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+      const s = document.createElement('script');
+      s.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+      container.appendChild(s);
+    }
+
+    function fecharEmulador() {
+      document.getElementById('emulator-screen').style.display = 'none';
+      document.getElementById('emulator-container').innerHTML = '';
+    }
+
+    function renderTwister() {
+      const feed = document.getElementById('twister-feed');
+      feed.innerHTML = '';
+      posts.forEach(p => {
+        const d = document.createElement('div');
+        d.className = 'card';
+        d.innerHTML = `
+          <div style="display:flex; justify-content:space-between;">
+            <strong style="color:var(--lang-color);">@${p.autor}</strong>
+            <span style="font-size:0.75rem; background:#333; padding:2px 6px; border-radius:3px;">${p.idioma}</span>
+          </div>
+          <p style="margin-top:6px; font-size:0.85rem;">${p.texto}</p>
+        `;
+        feed.appendChild(d);
+      });
+    }
+
+    function publicarTwister() {
+      const txt = document.getElementById('twister-input').value;
+      const lang = document.getElementById('lang-select').value;
+      if(!txt.trim()) return;
+      posts.unshift({ autor: document.getElementById('user-display').innerText, idioma: lang, texto: txt });
+      document.getElementById('twister-input').value = '';
+      renderTwister();
+    }
+
+    function enviarChat() {
+      const txt = document.getElementById('chat-txt');
+      if(!txt.value.trim()) return;
+      const box = document.getElementById('chat-msgs');
+      const d = document.createElement('div');
+      d.style.cssText = "background:#1e1e1e; padding:6px; border-radius:4px;";
+      d.innerHTML = `<strong>[${document.getElementById('user-display').innerText}]:</strong> ${txt.value}`;
+      box.appendChild(d);
+      txt.value = '';
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function subirArquivo(e) {
+      const f = e.target.files[0];
+      if(!f) return;
+      const r = new FileReader();
+      r.onload = function(evt) {
+        arquivosCloud.push({ nome: f.name, dados: evt.target.result });
+        renderCloud();
+      };
+      r.readAsDataURL(f);
+    }
+
+    function renderCloud() {
+      const grid = document.getElementById('cloud-grid');
+      grid.innerHTML = arquivosCloud.length === 0 ? '<p style="color:var(--text-sub);">Nenhum arquivo armazenado.</p>' : '';
+      arquivosCloud.forEach(a => {
+        const d = document.createElement('div');
+        d.className = 'card';
+        d.innerHTML = `<strong>${a.nome}</strong><br><a href="${a.dados}" download="${a.nome}" style="color:var(--accent); font-size:0.8rem;">[Baixar]</a>`;
+        grid.appendChild(d);
+      });
+    }
+
+    function limparDados() {
+      if(confirm("Deseja apagar todos os dados locais?")) {
+        arquivosCloud = [];
+        posts = [];
+        renderCloud();
+        renderTwister();
+      }
+    }
+
+    renderizarJogos();
+    renderTwister();
+    renderCloud();
+  </script>
+</body>
+  </html>
+            
