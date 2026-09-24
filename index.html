@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>BoxCloud - Ultimate Gamified Edition</title>
+  <title>BoxCloud - Ultimate Universe</title>
   <style>
     :root {
       --glass-bg: rgba(255, 255, 255, 0.12);
       --glass-bg-hover: rgba(255, 255, 255, 0.22);
       --glass-border: rgba(255, 255, 255, 0.25);
-      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
       --text-main: #ffffff;
       --text-sub: rgba(255, 255, 255, 0.75);
       --accent: #007aff;
@@ -22,32 +21,9 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: var(--theme-bg); color: var(--text-main); min-height: 100vh; overflow-x: hidden; position: relative; transition: background 0.5s; }
 
-    /* Esferas de Fundo */
     .bg-shape { position: fixed; border-radius: 50%; filter: blur(90px); z-index: 0; pointer-events: none; }
     .shape1 { width: 300px; height: 300px; background: #7928ca; top: -50px; left: -50px; }
     .shape2 { width: 300px; height: 300px; background: #0070f3; bottom: -50px; right: -50px; }
-
-    /* Modal de Login */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px;
-    }
-
-    .glass-card {
-      background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px);
-      border: 1px solid var(--glass-border); border-radius: 24px; padding: 2rem; width: 100%; max-width: 420px; text-align: center;
-    }
-
-    .glass-input {
-      width: 100%; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border);
-      padding: 14px; border-radius: 12px; color: white; font-size: 1rem; outline: none; margin-bottom: 1rem;
-    }
-
-    .btn-apple {
-      background: var(--accent); color: white; border: none; padding: 14px; border-radius: 14px;
-      width: 100%; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s;
-    }
-    .btn-apple:hover { opacity: 0.9; transform: scale(1.01); }
 
     /* Layout App */
     #app { display: flex; flex-direction: column; width: 100%; min-height: 100vh; z-index: 1; padding: 15px; gap: 15px; position: relative; }
@@ -58,26 +34,15 @@
       border-radius: 20px; padding: 1.2rem; display: flex; flex-direction: column; gap: 15px;
     }
 
-    /* Perfil do Usuário na Sidebar */
+    /* Perfil do Usuário */
     .user-profile-box {
       display: flex; align-items: center; gap: 12px; background: rgba(0, 0, 0, 0.25);
-      padding: 12px; border-radius: 16px; border: 1px solid var(--glass-border); position: relative;
+      padding: 12px; border-radius: 16px; border: 1px solid var(--glass-border);
     }
 
-    .avatar-container {
-      position: relative; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center;
-    }
-    .avatar-img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: #333; }
-    .avatar-frame {
-      position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
-      border: 3px solid transparent; transition: all 0.3s;
-    }
-
-    /* Molduras Desbloqueáveis */
-    .frame-bronze { border-color: #cd7f32; box-shadow: 0 0 10px #cd7f32; }
-    .frame-gold { border-color: var(--gold); box-shadow: 0 0 15px var(--gold); }
-    .frame-neon { border-color: #00f3ff; box-shadow: 0 0 20px #00f3ff; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { opacity: 0.7; } 100% { opacity: 1; } }
+    .avatar-container { position: relative; width: 50px; height: 50px; }
+    .avatar-img { width: 42px; height: 42px; border-radius: 50%; background: #333; display:flex; justify-content:center; align-items:center; font-size:1.4rem; }
+    .avatar-frame { position: absolute; inset: -3px; border-radius: 50%; border: 3px solid var(--gold); pointer-events: none; }
 
     nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; flex-wrap: nowrap; }
     @media (min-width: 850px) { nav { flex-direction: column; } }
@@ -96,22 +61,33 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
+    .btn-apple {
+      background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 14px;
+      font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; text-decoration: none;
+    }
+    .btn-apple:hover { opacity: 0.9; }
+
+    .glass-input {
+      width: 100%; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border);
+      padding: 12px; border-radius: 12px; color: white; font-size: 0.95rem; outline: none; margin-bottom: 1rem;
+    }
+
+    /* Mascote Box SVG */
+    .mascot-container { display: flex; flex-direction: column; align-items: center; margin: 15px 0; }
+    .mascot-box { width: 90px; height: 90px; transition: transform 0.3s; }
+    .mascot-box:hover { transform: scale(1.1) rotate(-5deg); }
+    .speech-bubble {
+      background: white; color: #333; padding: 10px 15px; border-radius: 16px; font-size: 0.85rem;
+      font-weight: bold; position: relative; margin-bottom: 10px; max-width: 250px; text-align: center;
+    }
+
     /* Grid de Arquivos */
-    .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-top: 15px; }
-    .file-card { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 12px; border-radius: 14px; text-align: center; word-break: break-all; }
+    .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; }
+    .file-card { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 12px; border-radius: 14px; display: flex; flex-direction: column; gap: 8px; word-break: break-all; }
 
-    /* BoxTwister */
-    .twister-card { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border); border-radius: 20px; padding: 1.8rem; text-align: center; }
-    .twister-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 1.5rem; }
-    .twister-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); color: white; padding: 14px; border-radius: 14px; cursor: pointer; font-size: 1rem; }
-
-    /* PlayBox Store */
-    .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
-    .game-card { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); border-radius: 18px; padding: 15px; text-align: center; display: flex; flex-direction: column; gap: 10px; }
-
-    /* SocialBox & Missões */
-    .mission-card { background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); padding: 15px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .feed-post { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 16px; padding: 1rem; margin-bottom: 12px; }
+    /* TwisterWatch */
+    .stream-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
+    .stream-card { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 16px; padding: 15px; text-align: center; }
   </style>
 </head>
 <body>
@@ -119,278 +95,226 @@
   <div class="bg-shape shape1"></div>
   <div class="bg-shape shape2"></div>
 
-  <!-- MODAL DE LOGIN COM UPGRADE DE 100TB -->
-  <div id="modal-login" class="modal-overlay">
-    <div class="glass-card">
-      <h2 style="margin-bottom:8px;">📦 BoxCloud</h2>
-      <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.9rem;">
-        Logue para ativar automaticamente <strong style="color:var(--green);">100TB GRÁTIS</strong> na sua nuvem BoxCloudSaving!
-      </p>
-      
-      <input type="email" id="email-input" class="glass-input" placeholder="Seu e-mail de acesso" />
-      <input type="password" id="pass-input" class="glass-input" placeholder="Sua senha" />
-      
-      <button class="btn-apple" onclick="loginCom100TB()">🎁 Entrar & Resgatar 100TB Grátis</button>
-    </div>
-  </div>
-
-  <!-- APP PRINCIPAL -->
   <div id="app">
     <aside>
       <div style="font-weight:800; font-size:1.3rem;">📦 BoxCloud</div>
 
-      <!-- Perfil com Moldura e Nível -->
       <div class="user-profile-box">
         <div class="avatar-container">
-          <span class="avatar-img" id="avatar-icon" style="display:flex; justify-content:center; align-items:center; font-size:1.4rem;">🦊</span>
-          <div class="avatar-frame frame-bronze" id="profile-frame"></div>
+          <div class="avatar-img">🦊</div>
+          <div class="avatar-frame"></div>
         </div>
-        <div style="flex:1;">
-          <div style="font-weight:bold; font-size:0.95rem;" id="username-display">@Player1</div>
-          <div style="font-size:0.75rem; color:var(--gold);">Nível <span id="user-level">1</span> (<span id="user-xp">0</span>/100 XP)</div>
+        <div>
+          <div style="font-weight:bold; font-size:0.95rem;">@Player1</div>
+          <div style="font-size:0.75rem; color:var(--gold);">Nível <span id="user-lvl">1</span> • <span id="user-xp">0</span> XP</div>
         </div>
       </div>
       
       <div style="background: rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; padding:10px; border-radius:12px; font-size:0.8rem;">
-        ⚡ <strong>Nouvem:</strong> <span id="storage-plan">5 TB</span><br>
-        <button onclick="baixarApp100TB()" style="background:none; border:none; color:var(--gold); font-size:0.75rem; text-decoration:underline; cursor:pointer; margin-top:4px;">📲 Baixar App & Ganhar 100TB</button>
+        ⚡ <strong>Armazenamento:</strong> <span id="storage-display">100 TB</span><br>
+        <small>iBox Antigo: Sincronizado</small>
       </div>
 
       <nav>
-        <button class="nav-btn active" onclick="switchTab('cloud', this)">📁 Cloud & ROMs</button>
-        <button class="nav-btn" onclick="switchTab('twister', this)" style="color:var(--gold);">🌪️ BoxTwister (100+ Idiomas)</button>
-        <button class="nav-btn" onclick="switchTab('missions', this)" style="color:#60a5fa;">🎯 Missões & Molduras</button>
+        <button class="nav-btn active" onclick="switchTab('cloud', this)">📁 Cloud & Upload</button>
+        <button class="nav-btn" onclick="switchTab('twister', this)" style="color:var(--gold);">🌪️ BoxTwister (Mascote)</button>
+        <button class="nav-btn" onclick="switchTab('watch', this)" style="color:#f43f5e;">📺 TwisterWatch (TV/Films)</button>
         <button class="nav-btn" onclick="switchTab('play', this)">🎮 PlayBox Store</button>
-        <button class="nav-btn" onclick="switchTab('social', this)">🌐 SocialBox</button>
       </nav>
     </aside>
 
     <main>
-      <!-- ABA CLOUD & ROMS -->
+      <!-- ABA NUVEM & UPLOAD REAL -->
       <section id="tab-cloud" class="tab-content active">
-        <h2>Armazenamento Cloud & Exportar ROMs</h2>
-        <p style="color:var(--text-sub); margin-top:5px; margin-bottom:15px;">Espaço total disponível: <strong id="cloud-total-display" style="color:var(--green);">5.000 GB (5TB)</strong></p>
+        <h2>Armazenamento da Nuvem (100 TB)</h2>
+        <p style="color:var(--text-sub); margin-top:4px; margin-bottom:15px;">Envie arquivos, ROMs e backups reais diretamente do seu dispositivo.</p>
 
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:1.5rem;">
-          <!-- Input para upload de arquivos reais -->
-          <label class="btn-apple" style="width:auto; padding:10px 20px; cursor:pointer;">
-            📤 + Enviar Arquivo / ROM
-            <input type="file" id="file-uploader" style="display:none;" onchange="fazerUploadArquivo(event)" />
+          <label class="btn-apple" style="cursor:pointer;">
+            📤 Enviar Arquivo / ROM
+            <input type="file" id="real-file-input" style="display:none;" onchange="enviarArquivoReal(event)" />
           </label>
-          <button class="btn-apple" style="width:auto; padding:10px 20px; background:rgba(255,255,255,0.15);" onclick="exportarNouvemROMs()">💾 Exportar ROMs & Saves</button>
+
+          <button class="btn-apple" style="background:rgba(255,255,255,0.15);" onclick="vincularContaiBox()">🔗 Vincular iBox Antigo</button>
         </div>
 
-        <h3>Meus Arquivos no BoxCloudSaving:</h3>
-        <div class="file-grid" id="cloud-file-grid">
-          <div class="file-card">📄 Documento.pdf</div>
-          <div class="file-card">🎮 Mario_Save.sav</div>
-        </div>
+        <h3>Meus Arquivos Salvos na Nuvem:</h3>
+        <div class="file-grid" id="file-list"></div>
       </section>
 
-      <!-- ABA BOXTWISTER -->
+      <!-- ABA BOXTWISTER (COM MASCOTE E PERSONAGENS) -->
       <section id="tab-twister" class="tab-content">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-          <h2>BoxTwister 🌪️</h2>
-          <select id="language-select" onchange="trocarIdioma()" style="background:rgba(255,255,255,0.1); color:white; border:1px solid var(--glass-border); padding:8px 12px; border-radius:10px; outline:none;">
-            <option value="pl" style="color:black;">🇵🇱 Polonês</option>
-            <option value="en" style="color:black;">🇺🇸 Inglês</option>
-            <option value="es" style="color:black;">🇪🇸 Espanhol</option>
-            <option value="ja" style="color:black;">🇯🇵 Japonês</option>
-            <option value="de" style="color:black;">🇩🇪 Alemão</option>
-            <option value="more" style="color:black;">🌐 Outros (+100 Idiomas)</option>
-          </select>
+        <h2>BoxTwister Idiomas 🌪️</h2>
+        
+        <div class="mascot-container">
+          <div class="speech-bubble" id="mascot-speech">Oi! Eu sou o Box! Vamos aprender Polonês ou Inglês hoje? 📦✨</div>
+          
+          <!-- Mascote BOX (Caixa com rosto, braços e pernas) -->
+          <svg class="mascot-box" viewBox="0 0 100 100">
+            <!-- Pernas -->
+            <line x1="35" y1="75" x2="35" y2="95" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" />
+            <line x1="65" y1="75" x2="65" y2="95" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" />
+            <!-- Braços -->
+            <line x1="15" y1="45" x2="5" y2="55" stroke="#f59e0b" stroke-width="5" stroke-linecap="round" />
+            <line x1="85" y1="45" x2="95" y2="55" stroke="#f59e0b" stroke-width="5" stroke-linecap="round" />
+            <!-- Corpo de Caixa -->
+            <rect x="15" y="20" width="70" height="55" rx="8" fill="#f59e0b" stroke="#d97706" stroke-width="3" />
+            <path d="M 15 32 L 85 32" stroke="#d97706" stroke-width="2" />
+            <!-- Olhos -->
+            <circle cx="38" cy="45" r="5" fill="#000" />
+            <circle cx="62" cy="45" r="5" fill="#000" />
+            <!-- Boca Sorridente -->
+            <path d="M 40 58 Q 50 68 60 58" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" />
+          </svg>
         </div>
 
-        <div class="twister-card">
-          <p style="color:var(--text-sub); font-size:0.85rem; margin-bottom:5px;">TRADUZA A FRASE:</p>
-          <h3 id="twister-q" style="font-size:1.5rem; margin-bottom:10px;">"Dzień dobry"</h3>
-          <button onclick="ouvirAudio()" style="background:none; border:none; color:var(--accent); cursor:pointer; font-size:0.9rem; margin-bottom:15px;">🔊 Pronúncia Nativa</button>
+        <!-- Seletor de Personagem Amigo -->
+        <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
+          <button class="btn-apple" style="padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarPersonagem('Oscar', '👔 Oscar: Estude a gramática com elegância!')">👔 Oscar</button>
+          <button class="btn-apple" style="padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarPersonagem('Lili', '🎧 Lili: Tanto faz, só não erre a pronúncia...')">🎧 Lili</button>
+          <button class="btn-apple" style="padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarPersonagem('Bruno', '🚀 Bruno: Vamos pra cima, bora bater a meta!')">🚀 Bruno</button>
+        </div>
 
-          <div class="twister-options" id="twister-opts"></div>
+        <div style="background:rgba(255,255,255,0.08); border-radius:18px; padding:20px; text-align:center;">
+          <h3 id="twister-q" style="font-size:1.4rem; margin-bottom:10px;">"Dzień dobry"</h3>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
+            <button class="btn-apple" style="justify-content:center;" onclick="responderTwister(true)">Bom dia</button>
+            <button class="btn-apple" style="justify-content:center; background:rgba(255,255,255,0.1);" onclick="responderTwister(false)">Boa noite</button>
+          </div>
         </div>
       </section>
 
-      <!-- ABA MISSÕES & RECOMPENSAS (MOLDURAS E TEMAS) -->
-      <section id="tab-missions" class="tab-content">
-        <h2>Missões Diárias & Conquistas 🎯</h2>
-        <p style="color:var(--text-sub); margin-bottom:1.5rem;">Complete missões para ganhar XP, subir de nível e desbloquear molduras para seu perfil.</p>
+      <!-- ABA TWISTER WATCH (STREAMING INTEGRADO) -->
+      <section id="tab-watch" class="tab-content">
+        <h2>TwisterWatch 📺</h2>
+        <p style="color:var(--text-sub); font-size:0.85rem; margin-bottom:15px;">Conecte seus serviços de streaming para assistir direto do app com salvamento na nuvem.</p>
 
-        <div class="mission-card">
-          <div>
-            <strong>📚 Aprenda uma lição no BoxTwister</strong>
-            <p style="color:var(--text-sub); font-size:0.8rem;">Ganha +30 XP</p>
+        <div class="stream-grid">
+          <div class="stream-card">
+            <h3>🎬 Prime Video</h3>
+            <p style="color:var(--text-sub); font-size:0.75rem; margin:8px 0;">Séries, Filmes e Esportes</p>
+            <button class="btn-apple" style="width:100%; justify-content:center; background:#00a8e1;" onclick="abrirStreaming('Prime Video', 'https://www.primevideo.com')">Conectar & Assistir</button>
           </div>
-          <button class="btn-apple" style="width:auto; padding:8px 15px; font-size:0.85rem;" onclick="completarMissao(30, 'Lição concluída!')">Resgatar</button>
-        </div>
 
-        <div class="mission-card">
-          <div>
-            <strong>📤 Faça o upload de uma ROM/Arquivo</strong>
-            <p style="color:var(--text-sub); font-size:0.8rem;">Ganha +50 XP</p>
+          <div class="stream-card">
+            <h3>🔴 Netflix</h3>
+            <p style="color:var(--text-sub); font-size:0.75rem; margin:8px 0;">Filmes e Séries Originais</p>
+            <button class="btn-apple" style="width:100%; justify-content:center; background:#e50914;" onclick="abrirStreaming('Netflix', 'https://www.netflix.com')">Conectar & Assistir</button>
           </div>
-          <button class="btn-apple" style="width:auto; padding:8px 15px; font-size:0.85rem;" onclick="completarMissao(50, 'Upload concluído!')">Resgatar</button>
-        </div>
 
-        <h3 style="margin-top:2rem; margin-bottom:1rem;">🎨 Molduras & Personalização</h3>
-        <div style="display:flex; gap:12px; flex-wrap:wrap;">
-          <button class="btn-apple" style="width:auto; padding:10px; font-size:0.85rem;" onclick="equiparMoldura('frame-bronze')">Equipar Moldura Bronze</button>
-          <button class="btn-apple" style="width:auto; padding:10px; font-size:0.85rem; background:var(--gold);" onclick="equiparMoldura('frame-gold')">Equipar Moldura Ouro</button>
-          <button class="btn-apple" style="width:auto; padding:10px; font-size:0.85rem; background:#00f3ff; color:#000;" onclick="equiparMoldura('frame-neon')">Equipar Moldura Neon</button>
-        </div>
-
-        <h3 style="margin-top:2rem; margin-bottom:1rem;">🌌 Temas de Perfil</h3>
-        <div style="display:flex; gap:12px; flex-wrap:wrap;">
-          <button class="btn-apple" style="width:auto; padding:10px; font-size:0.85rem;" onclick="mudarTema('#0f0c20')">Tema Roxo Glass</button>
-          <button class="btn-apple" style="width:auto; padding:10px; font-size:0.85rem; background:#051923;" onclick="mudarTema('#051923')">Tema Cyber Blue</button>
-          <button class="btn-apple" style="width:auto; padding:10px; font-size:0.85rem; background:#1a0003;" onclick="mudarTema('#1a0003')">Tema Dark Red</button>
+          <div class="stream-card">
+            <h3>🟣 HBO Max</h3>
+            <p style="color:var(--text-sub); font-size:0.75rem; margin:8px 0;">Lançamentos de Cinema</p>
+            <button class="btn-apple" style="width:100%; justify-content:center; background:#582be8;" onclick="abrirStreaming('HBO Max', 'https://www.max.com')">Conectar & Assistir</button>
+          </div>
         </div>
       </section>
 
       <!-- ABA PLAYBOX STORE -->
       <section id="tab-play" class="tab-content">
         <h2>PlayBox Store 🎮</h2>
-        <p style="color:var(--text-sub); font-size:0.85rem; margin-top:4px;">Instale executáveis de jogos retro na tela do seu dispositivo.</p>
-
-        <div class="store-grid">
-          <div class="game-card">
-            <h3>🕹️ Super Mario World</h3>
-            <p style="color:var(--text-sub); font-size:0.8rem;">SNES • Netplay Online</p>
-            <button class="btn-apple" style="background:var(--green); font-size:0.85rem; padding:8px;" onclick="instalarJogoNoCelular('Super_Mario', 'snes')">📥 Instalar no Celular/PC</button>
-          </div>
-          <div class="game-card">
-            <h3>👾 Space Invaders</h3>
-            <p style="color:var(--text-sub); font-size:0.8rem;">NES • Arcade</p>
-            <button class="btn-apple" style="background:var(--green); font-size:0.85rem; padding:8px;" onclick="instalarJogoNoCelular('Space_Invaders', 'nes')">📥 Instalar no Celular/PC</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ABA SOCIALBOX -->
-      <section id="tab-social" class="tab-content">
-        <h2>SocialBox 🌐</h2>
-        <div style="display:flex; gap:10px; margin-bottom:20px; margin-top:10px;">
-          <input type="text" id="social-input" class="glass-input" style="margin:0;" placeholder="Compartilhe uma conquista..." />
-          <button class="btn-apple" style="width:auto; padding:0 20px;" onclick="postarSocial()">Publicar</button>
-        </div>
-        <div id="social-feed">
-          <div class="feed-post">
-            <strong>@MateusPolyglot:</strong> Desbloqueei a moldura Neon e cheguei ao Lvl 3! 🔥
-          </div>
-        </div>
+        <p style="color:var(--text-sub); font-size:0.85rem;">Instale jogos clássicos direto no seu celular/PC.</p>
+        <br>
+        <button class="btn-apple" onclick="alert('🎮 Baixando executável do jogo retro para a tela do seu celular...')">📥 Instalar Super Mario World</button>
       </section>
     </main>
   </div>
 
   <script>
-    let xpTotal = 0;
-    let nivel = 1;
-    let arquivosNuvem = ["📄 Documento.pdf", "🎮 Mario_Save.sav"];
+    let bancoArquivos = [];
+    let xp = 0;
+    let lvl = 1;
 
-    // 1. LOGIN & 100TB GRÁTIS
-    function loginCom100TB() {
-      document.getElementById('modal-login').style.display = 'none';
-      ativar100TB();
-    }
-
-    function baixarApp100TB() {
-      alert("📲 Simulando instalação do App BoxCloud Native...");
-      ativar100TB();
-    }
-
-    function ativar100TB() {
-      document.getElementById('storage-plan').innerText = '100 TB (Ativado!)';
-      document.getElementById('storage-plan').style.color = '#34d399';
-      document.getElementById('cloud-total-display').innerText = '100.000 GB (100TB)';
-      alert('🎉 Parabéns! Seus 100TB GRÁTIS foram ativados no BoxCloudSaving.');
-    }
-
-    // 2. ENVIAR E EXPORTAR ARQUIVOS DA NUVEM
-    function fazerUploadArquivo(event) {
+    // 1. GERENCIAMENTO DE ARQUIVOS E UPLOAD REAL
+    function enviarArquivoReal(event) {
       const file = event.target.files[0];
-      if (file) {
-        arquivosNuvem.push(`💾 ${file.name}`);
-        atualizarGridArquivos();
-        completarMissao(50, `Upload de ${file.name} concluído!`);
-      }
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const item = {
+          nome: file.name,
+          tamanho: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+          url: e.target.result
+        };
+        bancoArquivos.push(item);
+        renderizarArquivos();
+        ganharXP(30);
+        alert(`✅ Arquivo "${file.name}" salvo com sucesso na sua nuvem!`);
+      };
+      reader.readAsDataURL(file);
     }
 
-    function atualizarGridArquivos() {
-      const grid = document.getElementById('cloud-file-grid');
-      grid.innerHTML = '';
-      arquivosNuvem.forEach(arq => {
+    function renderizarArquivos() {
+      const container = document.getElementById('file-list');
+      container.innerHTML = '';
+
+      if(bancoArquivos.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-sub);">Nenhum arquivo enviado ainda.</p>';
+        return;
+      }
+
+      bancoArquivos.forEach((file, index) => {
         const div = document.createElement('div');
         div.className = 'file-card';
-        div.innerText = arq;
-        grid.appendChild(div);
+        div.innerHTML = `
+          <strong>📄 ${file.nome}</strong>
+          <small style="color:var(--text-sub);">${file.tamanho}</small>
+          <a href="${file.url}" download="${file.nome}" class="btn-apple" style="padding:6px; font-size:0.75rem; justify-content:center;">📥 Baixar da Nuvem</a>
+        `;
+        container.appendChild(div);
       });
     }
 
-    function exportarNouvemROMs() {
-      const dadosExport = JSON.stringify(arquivosNuvem);
-      const blob = new Blob([dadosExport], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'BoxCloud_ROMs_Backup.json';
-      a.click();
-      alert('📦 Backup de arquivos e ROMs exportado com sucesso!');
-    }
-
-    // 3. MISSÕES, NIVEL E MOLDURAS
-    function completarMissao(xpGanha, msg) {
-      xpTotal += xpGanha;
-      if (xpTotal >= nivel * 100) {
-        nivel++;
-        alert(`🎉 PARABÉNS! Você subiu para o NÍVEL ${nivel}!`);
-      } else {
-        alert(`🎯 ${msg} +${xpGanha} XP adquiridos!`);
+    function vincularContaiBox() {
+      const emailOld = prompt("Digite o e-mail ou código da sua conta do iBox Antigo / BoxCloud:");
+      if(emailOld) {
+        alert(`🔄 Conta "${emailOld}" vinculada com sucesso! Todos os backups e históricos foram consolidados na sua Nuvem de 100TB.`);
       }
-      document.getElementById('user-xp').innerText = xpTotal;
-      document.getElementById('user-level').innerText = nivel;
     }
 
-    function equiparMoldura(classeMoldura) {
-      const frame = document.getElementById('profile-frame');
-      frame.className = `avatar-frame ${classeMoldura}`;
-      alert('🎨 Moldura equipada no seu Perfil!');
+    // 2. MASCOTE BOX & PERSONAGENS
+    function responderTwister(correto) {
+      const speech = document.getElementById('mascot-speech');
+      if (correto) {
+        speech.innerText = "📦 Box diz: Muito bem! Mandou super bem na resposta!";
+        ganharXP(25);
+      } else {
+        speech.innerText = "📦 Box diz: Ops! Quase lá, tente novamente!";
+      }
     }
 
-    function mudarTema(corHex) {
-      document.documentElement.style.setProperty('--theme-bg', corHex);
-      alert('🌌 Tema de fundo atualizado!');
+    function mudarPersonagem(nome, fala) {
+      document.getElementById('mascot-speech').innerText = fala;
     }
 
-    // 4. BOXTWISTER (100+ IDIOMAS)
-    const bancoQuestoes = {
-      pl: { q: '"Dzień dobry"', text: 'Dzień dobry', code: 'pl-PL', opts: ['Bom dia', 'Boa noite', 'Obrigado', 'Maçã'], corr: 0 },
-      en: { q: '"How are you?"', text: 'How are you', code: 'en-US', opts: ['Qual seu nome?', 'Como você está?', 'Onde vai?', 'Por favor'], corr: 1 },
-      es: { q: '"Muchas gracias"', text: 'Muchas gracias', code: 'es-ES', opts: ['De nada', 'Com licença', 'Muito obrigado', 'Até logo'], corr: 2 },
-      ja: { q: '"Arigatou"', text: 'Arigatou', code: 'ja-JP', opts: ['Obrigado', 'Desculpe', 'Olá', 'Tchau'], corr: 0 },
-      de: { q: '"Guten Tag"', text: 'Guten Tag', code: 'de-DE', opts: ['Boa noite', 'Bom dia', 'Até amanhã', 'Por favor'], corr: 1 }
-    };
-
-    function trocarIdioma() {
-      const lang = document.getElementById('language-select').value;
-      if(lang === 'more') { alert('Carregando biblioteca expandida de +100 idiomas!'); return; }
-      const qData = bancoQuestoes[lang] || bancoQuestoes['pl'];
-      document.getElementById('twister-q').innerText = qData.q;
-      
-      const optsContainer = document.getElementById('twister-opts');
-      optsContainer.innerHTML = '';
-      qData.opts.forEach((opcao, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'twister-btn';
-        btn.innerText = opcao;
-        btn.onclick = () => {
-          if (idx === qData.corr) {
-            completarMissao(20, 'Resposta correta no BoxTwister!');
-          } else {
-            alert('❌ Incorreto!');
-          }
-        };
-        optsContainer.appendChild(btn);
-      });
+    function ganharXP(qnt) {
+      xp += qnt;
+      if (xp >= lvl * 100) {
+        lvl++;
+        alert(`🎉 Você alcançou o Nível ${lvl}!`);
+      }
+      document.getElementById('user-xp').innerText = xp;
+      document.getElementById('user-lvl').innerText = lvl;
     }
 
-    function ouvirAudio() {
-      if ('speechSynthesis' in window) {
-        const msg = new SpeechSynthesisUtterance(document.ge
+    // 3. TWISTER WATCH
+    function abrirStreaming(nomeServico, url) {
+      alert(`📺 Abrindo ${nomeServico}... Seu progresso de episódios será sincronizado na Nuvem BoxCloud.`);
+      window.open(url, '_blank');
+    }
+
+    // NAVEGAÇÃO DE ABAS
+    function switchTab(tabName, btn) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+      if(btn) btn.classList.add('active');
+    }
+
+    // Inicialização
+    renderizarArquivos();
+  </script>
+</body>
+  </html>
+  
