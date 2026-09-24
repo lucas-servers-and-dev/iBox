@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BoxCloud - Glass Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>BoxCloud - Web Edition</title>
   <style>
     :root {
       --glass-bg: rgba(255, 255, 255, 0.12);
@@ -15,16 +15,19 @@
       --accent: #007aff;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
-    body { background: #0f0c20; color: var(--text-main); height: 100vh; display: flex; overflow: hidden; position: relative; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: #0f0c20; color: var(--text-main); min-height: 100vh; overflow-x: hidden; position: relative; }
 
-    .bg-shape { position: absolute; border-radius: 50%; filter: blur(90px); z-index: 0; }
-    .shape1 { width: 300px; height: 300px; background: #7928ca; top: -50px; left: -50px; }
-    .shape2 { width: 300px; height: 300px; background: #0070f3; bottom: -50px; right: -50px; }
+    /* Esferas de Fundo */
+    .bg-shape { position: fixed; border-radius: 50%; filter: blur(90px); z-index: 0; pointer-events: none; }
+    .shape1 { width: 250px; height: 250px; background: #7928ca; top: -50px; left: -50px; }
+    .shape2 { width: 250px; height: 250px; background: #0070f3; bottom: -50px; right: -50px; }
 
+    /* Modal de Login */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 1000;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      display: flex; justify-content: center; align-items: center; z-index: 9999;
       padding: 20px;
     }
 
@@ -41,38 +44,41 @@
     .btn-apple-style {
       background: var(--accent); color: white; border: none; padding: 14px; border-radius: 14px;
       width: 100%; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+      touch-action: manipulation;
     }
 
-    #app { display: flex; width: 100%; height: 100vh; z-index: 1; padding: 15px; gap: 15px; flex-direction: column; }
-    @media (min-width: 768px) { #app { flex-direction: row; } }
+    /* App Layout Mobile First */
+    #app { display: flex; flex-direction: column; width: 100%; min-height: 100vh; z-index: 1; padding: 15px; gap: 15px; position: relative; }
 
     aside {
       background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border);
-      border-radius: 20px; padding: 1.2rem; display: flex; flex-direction: column; gap: 10px;
+      border-radius: 20px; padding: 1rem; display: flex; flex-direction: column; gap: 10px;
     }
 
     nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
 
     .nav-btn {
       background: transparent; border: none; color: var(--text-sub); padding: 10px 14px;
-      border-radius: 12px; font-size: 0.9rem; cursor: pointer; whitespace: nowrap;
+      border-radius: 12px; font-size: 0.9rem; cursor: pointer; white-space: nowrap; flex-shrink: 0;
     }
     .nav-btn.active { background: var(--glass-bg-hover); color: white; border: 1px solid rgba(255, 255, 255, 0.2); }
 
     main {
       flex: 1; background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border);
-      border-radius: 20px; padding: 1.5rem; overflow-y: auto;
+      border-radius: 20px; padding: 1.2rem; overflow-y: auto;
     }
 
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
+    /* BoxTwister */
     .twister-card { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border); border-radius: 20px; padding: 1.5rem; text-align: center; }
     .twister-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1rem; }
     .twister-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 12px; cursor: pointer; }
 
-    #player-container { display: none; margin-top: 1rem; }
-    #emulator-iframe { width: 100%; height: 400px; border: none; border-radius: 12px; }
+    /* PlayBox Container */
+    #player-container { display: none; margin-top: 1rem; border-radius: 12px; overflow: hidden; background: #000; }
+    #emulator-iframe { width: 100%; height: 450px; border: none; }
   </style>
 </head>
 <body>
@@ -80,7 +86,7 @@
   <div class="bg-shape shape1"></div>
   <div class="bg-shape shape2"></div>
 
-  <!-- MODAL DE LOGIN -->
+  <!-- MODAL DE LOGIN (SEM 2FA) -->
   <div id="modal-login" class="modal-overlay">
     <div class="glass-card">
       <h2 style="margin-bottom:10px;">📦 BoxCloud</h2>
@@ -96,7 +102,10 @@
   <!-- APP PRINCIPAL -->
   <div id="app">
     <aside>
-      <div style="font-weight:bold; font-size:1.2rem;">📦 BoxCloud</div>
+      <div style="font-weight:bold; font-size:1.2rem; display:flex; justify-content:space-between; align-items:center;">
+        <span>📦 BoxCloud</span>
+        <span style="font-size: 0.75rem; color: #34d399; background: rgba(16,185,129,0.2); padding: 4px 8px; border-radius:8px;">AutoSave ON</span>
+      </div>
       <nav>
         <button class="nav-btn active" onclick="switchTab('cloud', this)">📁 Cloud</button>
         <button class="nav-btn" onclick="switchTab('twister', this)">🌪️ BoxTwister</button>
@@ -108,28 +117,37 @@
       <!-- Aba Cloud -->
       <section id="tab-cloud" class="tab-content active">
         <h2>Armazenamento BoxCloud (5TB)</h2>
-        <p style="color:var(--text-sub); margin-top:10px;">⚡ AutoSave do BoxCloudSaving: ATIVADO</p>
+        <p style="color:var(--text-sub); margin-top:10px;">Nuvem integrada com o BoxCloudSaving para gerenciar seus dados e progresso no celular e na Web.</p>
       </section>
 
       <!-- Aba BoxTwister -->
       <section id="tab-twister" class="tab-content">
-        <h2>BoxTwister 🌪️</h2>
+        <h2>BoxTwister 🌪️ - Idiomas</h2>
         <br>
         <div class="twister-card">
           <h3>Como se diz "Maçã" em Inglês?</h3>
           <div class="twister-options">
             <button class="twister-btn" onclick="alert('Incorreto!')">Water</button>
-            <button class="twister-btn" onclick="alert('Correto! Salvando progresso no BoxCloudSaving...')">Apple</button>
+            <button class="twister-btn" onclick="alert('Correto! +10 XP salvos no BoxCloudSaving...')">Apple</button>
           </div>
         </div>
       </section>
 
       <!-- Aba PlayBox -->
       <section id="tab-play" class="tab-content">
-        <h2>PlayBox (Netplay Online)</h2>
-        <br>
-        <button class="btn-apple-style" onclick="abrirJogo('nes')">Jogar NES Online</button>
+        <h2>PlayBox (Netplay & Emulador)</h2>
+        <p style="color:var(--text-sub); font-size:0.85rem; margin-top:5px; margin-bottom:15px;">Escolha uma plataforma para iniciar os servidores de jogos online:</p>
+        
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn-apple-style" style="width:auto; padding:10px 18px;" onclick="abrirJogo('nes')">NES Online</button>
+          <button class="btn-apple-style" style="width:auto; padding:10px 18px; background:#7928ca;" onclick="abrirJogo('snes')">SNES Online</button>
+        </div>
+
         <div id="player-container">
+          <div style="background:rgba(255,255,255,0.1); padding:8px 12px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.8rem; color:#34d399;">🌐 Conectado ao Netplay Server</span>
+            <button onclick="fecharJogo()" style="background:red; color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;">Sair</button>
+          </div>
           <iframe id="emulator-iframe"></iframe>
         </div>
       </section>
@@ -137,7 +155,7 @@
   </div>
 
   <script>
-    // Função para forçar o fechamento da tela de login
+    // Login Direto
     function entrarDireto() {
       const modal = document.getElementById('modal-login');
       if (modal) {
@@ -145,6 +163,7 @@
       }
     }
 
+    // Navegação de Abas
     function switchTab(tabName, btn) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -152,15 +171,40 @@
       if(btn) btn.classList.add('active');
     }
 
+    // Emulador Web
     function abrirJogo(system) {
       const container = document.getElementById('player-container');
       const iframe = document.getElementById('emulator-iframe');
+      
       container.style.display = 'block';
-      iframe.srcdoc = `
-        <html><body style="margin:0;background:#000;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh;">
-          <h3>Conectando aos Servidores Netplay...</h3>
-        </body></html>
+
+      // Código de inicialização do EmulatorJS com ROM de teste pública
+      const emuCode = `
+        <!DOCTYPE html>
+        <html>
+        <head><style>body, html { margin:0; padding:0; height:100%; background:#000; overflow:hidden; }</style></head>
+        <body>
+          <div id="game" style="width:100%;height:100%;"></div>
+          <script type="text/javascript">
+            EJS_player = '#game';
+            EJS_core = '${system}';
+            EJS_gameUrl = 'https://cdn.emulatorjs.org/stable/data/games/Space%20Invaders%20(USA).nes'; 
+            EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+            EJS_netplayUrl = 'https://netplay.emulatorjs.org';
+          <\/script>
+          <script src="https://cdn.emulatorjs.org/stable/data/loader.js"><\/script>
+        </body>
+        </html>
       `;
+
+      iframe.srcdoc = emuCode;
+    }
+
+    function fecharJogo() {
+      const container = document.getElementById('player-container');
+      const iframe = document.getElementById('emulator-iframe');
+      iframe.srcdoc = '';
+      container.style.display = 'none';
     }
   </script>
 </body>
