@@ -25,15 +25,20 @@
     .shape1 { width: 300px; height: 300px; background: #7928ca; top: -50px; left: -50px; }
     .shape2 { width: 300px; height: 300px; background: #0070f3; bottom: -50px; right: -50px; }
 
-    /* Modal de Login */
+    /* Modal de Login (Apenas quando clica em trocar conta) */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px;
+      backdrop-filter: blur(15px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px;
     }
 
     .glass-card {
       background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px);
       border: 1px solid var(--glass-border); border-radius: 24px; padding: 2rem; width: 100%; max-width: 400px; text-align: center;
+      position: relative;
+    }
+
+    .close-modal-btn {
+      position: absolute; top: 12px; right: 16px; background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;
     }
 
     .glass-input {
@@ -105,7 +110,7 @@
     .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; }
     .file-card { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 12px; border-radius: 14px; word-break: break-all; }
 
-    /* Filtros e Busca da PlayBox Store */
+    /* Filtros e Busca */
     .store-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
     .platform-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
     .pill-btn {
@@ -133,8 +138,9 @@
   <!-- MODAL DE LOGIN -->
   <div id="modal-login" class="modal-overlay">
     <div class="glass-card">
+      <button class="close-modal-btn" onclick="fecharModalLogin()">✖</button>
       <h2 style="margin-bottom:8px;">📦 BoxCloud Login</h2>
-      <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Entre para sincronizar seus jogos e nuvem.</p>
+      <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Digite qualquer e-mail e senha para entrar.</p>
 
       <form onsubmit="fazerLoginEmail(event)">
         <input type="email" id="input-email" class="glass-input" placeholder="Seu e-mail" required />
@@ -149,13 +155,13 @@
         Entrar com Microsoft
       </button>
 
-      <button class="btn-apple btn-guest" onclick="fazerLogin('visitante')">
-        👤 Entrar como Visitante
+      <button class="btn-apple btn-guest" onclick="fecharModalLogin()">
+        👤 Continuar como Convidado
       </button>
     </div>
   </div>
 
-  <!-- CONTAINER DE EMULAÇÃO HTML5 -->
+  <!-- CONTAINER DE EMULAÇÃO -->
   <div id="emulator-screen">
     <header>
       <span id="game-title-display" style="font-weight:bold; font-size:0.9rem;">🎮 PlayBox Emulador</span>
@@ -172,14 +178,14 @@
       <div class="user-profile-box">
         <div class="avatar-img" id="user-avatar">👤</div>
         <div>
-          <div style="font-weight:bold; font-size:0.95rem;" id="user-name">Visitante</div>
-          <div style="font-size:0.75rem; color:var(--gold);" id="account-type">Modo Convidado</div>
+          <div style="font-weight:bold; font-size:0.95rem;" id="user-name">Usuário</div>
+          <div style="font-size:0.75rem; color:var(--gold);" id="account-type">Acesso Livre</div>
         </div>
       </div>
       
       <div style="background: rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; padding:10px; border-radius:12px; font-size:0.8rem;">
         ⚡ <strong>Sua Nuvem:</strong> <span id="storage-status">100 TB Ativos</span><br>
-        <button onclick="document.getElementById('modal-login').style.display='flex'" style="background:none; border:none; color:white; font-size:0.75rem; text-decoration:underline; cursor:pointer; margin-top:4px;">Trocar de Conta</button>
+        <button onclick="abrirModalLogin()" style="background:none; border:none; color:white; font-size:0.75rem; text-decoration:underline; cursor:pointer; margin-top:4px;">Trocar de Conta</button>
       </div>
 
       <nav>
@@ -191,7 +197,7 @@
     </aside>
 
     <main>
-      <!-- 1. CLOUD & UPLOAD -->
+      <!-- 1. CLOUD & UPLOAD (PÁGINA INICIAL) -->
       <section id="tab-cloud" class="tab-content active">
         <h2>Armazenamento na Nuvem (100 TB)</h2>
         <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Sincronizado automaticamente com backup do iBox Antigo.</p>
@@ -266,7 +272,7 @@
         </div>
       </section>
 
-      <!-- 4. PLAYBOX STORE (TODOS OS JOGOS + BUSCA) -->
+      <!-- 4. PLAYBOX STORE -->
       <section id="tab-play" class="tab-content">
         <h2>PlayBox Store 🎮</h2>
         <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Encontre clássicos ou carregue qualquer arquivo de jogo (.nes, .snes, .gba, .gbc, .md, .n64, .zip).</p>
@@ -300,7 +306,6 @@
   </div>
 
   <script>
-    // BASE DE DADOS DE JOGOS PRÉ-CARREGADOS
     const catalogData = [
       { id: 1, nome: "Super Mario World", sistema: "snes", sysName: "SNES", core: "snes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
       { id: 2, nome: "Super Mario Bros", sistema: "nes", sysName: "NES", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
@@ -315,7 +320,39 @@
     let platFiltroAtual = 'todos';
     let arquivosSalvos = [];
 
-    // EXIBIR E FILTRAR JOGOS NA PLAYBOX STORE
+    // MODAL DE LOGIN (Aceita qualquer e-mail/senha diretamente)
+    function abrirModalLogin() {
+      document.getElementById('modal-login').style.display = 'flex';
+    }
+
+    function fecharModalLogin() {
+      document.getElementById('modal-login').style.display = 'none';
+    }
+
+    function fazerLoginEmail(e) {
+      e.preventDefault();
+      const email = document.getElementById('input-email').value;
+      if(email) {
+        document.getElementById('user-name').innerText = email.split('@')[0];
+        document.getElementById('account-type').innerText = "Conta Conectada";
+        document.getElementById('user-avatar').innerText = "✉️";
+        fecharModalLogin();
+      }
+    }
+
+    function fazerLogin(tipo) {
+      if(tipo === 'microsoft') {
+        const msEmail = prompt("Digite seu e-mail da Microsoft:", "usuario@outlook.com");
+        if(msEmail) {
+          document.getElementById('user-name').innerText = msEmail.split('@')[0];
+          document.getElementById('account-type').innerText = "Microsoft Conectada";
+          document.getElementById('user-avatar').innerText = "🟦";
+        } else return;
+      }
+      fecharModalLogin();
+    }
+
+    // PLAYBOX STORE
     function renderizarJogos() {
       const grid = document.getElementById('games-catalog');
       const termo = document.getElementById('game-search').value.toLowerCase();
@@ -328,7 +365,7 @@
       });
 
       if(filtrados.length === 0) {
-        grid.innerHTML = '<p style="color:var(--text-sub); grid-column: 1/-1;">Nenhum jogo encontrado com esse termo.</p>';
+        grid.innerHTML = '<p style="color:var(--text-sub); grid-column: 1/-1;">Nenhum jogo encontrado.</p>';
         return;
       }
 
@@ -344,41 +381,4 @@
       });
     }
 
-    function filtrarPlataforma(plat, btn) {
-      platFiltroAtual = plat;
-      document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-      if(btn) btn.classList.add('active');
-      renderizarJogos();
-    }
-
-    function filtrarJogos() {
-      renderizarJogos();
-    }
-
-    // EXECUTAR EMULADOR UNIVERSAL (EMULATOR JS)
-    function executarEmulador(sistema, romUrl, titulo) {
-      document.getElementById('emulator-screen').style.display = 'flex';
-      document.getElementById('game-title-display').innerText = `🎮 ${titulo}`;
-
-      const container = document.getElementById('emulator-container');
-      container.innerHTML = '<div id="game"></div>';
-
-      window.EJS_player = '#game';
-      window.EJS_core = sistema;
-      window.EJS_gameUrl = romUrl;
-      window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
-
-      const script = document.createElement('script');
-      script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
-      container.appendChild(script);
-    }
-
-    function carregarRomLocal(e) {
-      const file = e.target.files[0];
-      if(!file) return;
-
-      const blobUrl = URL.createObjectURL(file);
-      const ext = file.name.split('.').pop().toLowerCase();
-
-      let core = 'nes';
-      if(['smc', 'sfc', 'fig'].includes(ext)) c
+   
