@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>BoxCloud - Multi-Auth & Universe</title>
+  <title>BoxCloud & PlayBox Universal Games</title>
   <style>
     :root {
       --glass-bg: rgba(255, 255, 255, 0.12);
@@ -25,7 +25,7 @@
     .shape1 { width: 300px; height: 300px; background: #7928ca; top: -50px; left: -50px; }
     .shape2 { width: 300px; height: 300px; background: #0070f3; bottom: -50px; right: -50px; }
 
-    /* Modal de Login Flexível */
+    /* Modal de Login */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px;
@@ -97,9 +97,32 @@
       font-weight: bold; margin-bottom: 10px; max-width: 260px; text-align: center;
     }
 
-    /* Grid de Arquivos */
+    .lang-select {
+      width: 100%; background: rgba(0,0,0,0.3); color: white; border: 1px solid var(--glass-border);
+      padding: 10px; border-radius: 12px; font-size: 1rem; margin-bottom: 15px; outline: none;
+    }
+
     .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; }
     .file-card { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); padding: 12px; border-radius: 14px; word-break: break-all; }
+
+    /* Filtros e Busca da PlayBox Store */
+    .store-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .platform-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+    .pill-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white;
+      padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+    }
+    .pill-btn.active { background: var(--accent); border-color: var(--accent); }
+
+    /* Emulador Tela Cheia */
+    #emulator-screen {
+      display: none; position: fixed; inset: 0; background: #000; z-index: 10000;
+      flex-direction: column; align-items: center; justify-content: flex-start;
+    }
+    #emulator-screen header {
+      width: 100%; background: #111; padding: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333;
+    }
+    #emulator-container { width: 100%; flex: 1; position: relative; }
   </style>
 </head>
 <body>
@@ -107,15 +130,12 @@
   <div class="bg-shape shape1"></div>
   <div class="bg-shape shape2"></div>
 
-  <!-- MODAL DE LOGIN COM E-MAIL / MICROSOFT / VISITANTE -->
+  <!-- MODAL DE LOGIN -->
   <div id="modal-login" class="modal-overlay">
     <div class="glass-card">
       <h2 style="margin-bottom:8px;">📦 BoxCloud Login</h2>
-      <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">
-        Entre na sua conta para resgatar 100TB de armazenamento.
-      </p>
+      <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Entre para sincronizar seus jogos e nuvem.</p>
 
-      <!-- Formulário de Login por E-mail -->
       <form onsubmit="fazerLoginEmail(event)">
         <input type="email" id="input-email" class="glass-input" placeholder="Seu e-mail" required />
         <input type="password" id="input-pass" class="glass-input" placeholder="Sua senha" required />
@@ -125,7 +145,7 @@
       <div class="divider">ou continue com</div>
       
       <button class="btn-apple btn-ms" onclick="fazerLogin('microsoft')">
-        <svg width="18" height="18" viewBox="0 0 23 23"><path fill="#f35325" d="M1 1h10v10H1z"/><path fill="#81bc06" d="M12 1h10v10H12z"/><path fill="#05a6f0" d="M1 12h10v10H1z"/><path fill="#ffba08" d="M12 12h10v10H12z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 23 23"><path fill="#f35325" d="M1 1h10v10H1z"/><path fill="#81bc06" d="M12 1h10v10H1z"/><path fill="#05a6f0" d="M1 12h10v10H1z"/><path fill="#ffba08" d="M12 12h10v10H1z"/></svg>
         Entrar com Microsoft
       </button>
 
@@ -133,6 +153,15 @@
         👤 Entrar como Visitante
       </button>
     </div>
+  </div>
+
+  <!-- CONTAINER DE EMULAÇÃO HTML5 -->
+  <div id="emulator-screen">
+    <header>
+      <span id="game-title-display" style="font-weight:bold; font-size:0.9rem;">🎮 PlayBox Emulador</span>
+      <button onclick="fecharEmulador()" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; cursor:pointer;">✖ Sair do Jogo</button>
+    </header>
+    <div id="emulator-container"></div>
   </div>
 
   <!-- APP PRINCIPAL -->
@@ -179,12 +208,21 @@
         <div class="file-grid" id="file-list"></div>
       </section>
 
-      <!-- 2. BOXTWISTER -->
+      <!-- 2. BOXTWISTER IDIOMAS -->
       <section id="tab-twister" class="tab-content">
         <h2>BoxTwister Idiomas 🌪️</h2>
         
+        <label style="font-size:0.85rem; color:var(--text-sub);">Escolha o Idioma para Estudar:</label>
+        <select class="lang-select" id="lang-picker" onchange="trocarIdioma()">
+          <option value="en">🇺🇸 Inglês</option>
+          <option value="es">🇪🇸 Espanhol</option>
+          <option value="pl">🇵🇱 Polonês</option>
+          <option value="fr">🇫🇷 Francês</option>
+          <option value="de">🇩🇪 Alemão</option>
+        </select>
+
         <div class="mascot-container">
-          <div class="speech-bubble" id="speech-box">📦 Box: Vamos aprender um novo idioma hoje!</div>
+          <div class="speech-bubble" id="speech-box">📦 Box: Vamos praticar!</div>
           <svg class="mascot-box" viewBox="0 0 100 100">
             <line x1="35" y1="75" x2="35" y2="95" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" />
             <line x1="65" y1="75" x2="65" y2="95" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" />
@@ -197,16 +235,16 @@
         </div>
 
         <div style="display:flex; justify-content:center; gap:8px; margin-bottom:15px;">
-          <button class="btn-apple" style="width:auto; padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarFalta('👔 Oscar: Mantenha o foco nos estudos!')">👔 Oscar</button>
-          <button class="btn-apple" style="width:auto; padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarFalta('🎧 Lili: Tanto faz, desde que acerte...')">🎧 Lili</button>
-          <button class="btn-apple" style="width:auto; padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarFalta('🚀 Bruno: Vamos bater recorde de XP!')">🚀 Bruno</button>
+          <button class="btn-apple" style="width:auto; padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarFalta('👔 Oscar: Mantenha a disciplina!')">👔 Oscar</button>
+          <button class="btn-apple" style="width:auto; padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarFalta('🎧 Lili: No seu ritmo!')">🎧 Lili</button>
+          <button class="btn-apple" style="width:auto; padding:6px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1);" onclick="mudarFalta('🚀 Bruno: Vamos pontuar!')">🚀 Bruno</button>
         </div>
 
         <div style="background:rgba(255,255,255,0.08); border-radius:18px; padding:20px; text-align:center;">
-          <h3 style="font-size:1.4rem; margin-bottom:10px;">"Dzień dobry" (Polonês)</h3>
+          <h3 id="quiz-question" style="font-size:1.4rem; margin-bottom:10px;">"Good Morning"</h3>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-            <button class="btn-apple" onclick="responder(true)">Bom dia</button>
-            <button class="btn-apple" style="background:rgba(255,255,255,0.1);" onclick="responder(false)">Boa noite</button>
+            <button class="btn-apple" id="opt-1" onclick="responder(true)">Bom dia</button>
+            <button class="btn-apple" id="opt-2" style="background:rgba(255,255,255,0.1);" onclick="responder(false)">Boa noite</button>
           </div>
         </div>
       </section>
@@ -228,138 +266,119 @@
         </div>
       </section>
 
-      <!-- 4. PLAYBOX STORE -->
+      <!-- 4. PLAYBOX STORE (TODOS OS JOGOS + BUSCA) -->
       <section id="tab-play" class="tab-content">
         <h2>PlayBox Store 🎮</h2>
-        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Baixe os executáveis de jogos antigos direto para o seu dispositivo.</p>
-        
-        <div class="file-grid">
-          <div class="file-card">
-            <h3>🕹️ Super Mario World</h3>
-            <small style="color:var(--text-sub);">SNES Executável</small>
-            <button class="btn-apple" style="margin-top:10px; background:var(--green);" onclick="baixarJogo('Super_Mario')">📥 Baixar Jogo</button>
-          </div>
-          <div class="file-card">
-            <h3>👾 Space Invaders</h3>
-            <small style="color:var(--text-sub);">NES Executável</small>
-            <button class="btn-apple" style="margin-top:10px; background:var(--green);" onclick="baixarJogo('Space_Invaders')">📥 Baixar Jogo</button>
+        <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.85rem;">Encontre clássicos ou carregue qualquer arquivo de jogo (.nes, .snes, .gba, .gbc, .md, .n64, .zip).</p>
+
+        <!-- BUSCA E FILTROS -->
+        <div class="store-controls">
+          <input type="text" id="game-search" class="glass-input" placeholder="🔍 Buscar jogo..." oninput="filtrarJogos()" style="margin-bottom:0;" />
+          
+          <div class="platform-pills">
+            <button class="pill-btn active" onclick="filtrarPlataforma('todos', this)">Todos</button>
+            <button class="pill-btn" onclick="filtrarPlataforma('snes', this)">SNES</button>
+            <button class="pill-btn" onclick="filtrarPlataforma('nes', this)">NES</button>
+            <button class="pill-btn" onclick="filtrarPlataforma('gba', this)">GBA</button>
+            <button class="pill-btn" onclick="filtrarPlataforma('sega', this)">SEGA</button>
+            <button class="pill-btn" onclick="filtrarPlataforma('n64', this)">N64</button>
           </div>
         </div>
+
+        <!-- CARREGAR QUALQUER ROM -->
+        <div style="background: rgba(0, 122, 255, 0.15); border: 1px dashed var(--accent); padding: 12px; border-radius: 16px; margin-bottom: 20px; text-align: center;">
+          <label style="cursor: pointer; font-size:0.9rem; font-weight:bold; color:white; display:flex; align-items:center; justify-content:center; gap:8px;">
+            📂 Carregar ROM do Celular/PC
+            <input type="file" id="custom-rom-input" style="display:none;" onchange="carregarRomLocal(event)" />
+          </label>
+        </div>
+
+        <h3>Catálogo de Jogos:</h3>
+        <div class="file-grid" id="games-catalog"></div>
       </section>
     </main>
   </div>
 
   <script>
+    // BASE DE DADOS DE JOGOS PRÉ-CARREGADOS
+    const catalogData = [
+      { id: 1, nome: "Super Mario World", sistema: "snes", sysName: "SNES", core: "snes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 2, nome: "Super Mario Bros", sistema: "nes", sysName: "NES", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 3, nome: "Space Invaders", sistema: "nes", sysName: "NES", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 4, nome: "Sonic the Hedgehog", sistema: "sega", sysName: "SEGA Genesis", core: "segaMD", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 5, nome: "Pokemon FireRed", sistema: "gba", sysName: "Game Boy Advance", core: "gba", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 6, nome: "The Legend of Zelda", sistema: "nes", sysName: "NES", core: "nes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 7, nome: "Donkey Kong Country", sistema: "snes", sysName: "SNES", core: "snes", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" },
+      { id: 8, nome: "Super Mario 64", sistema: "n64", sysName: "Nintendo 64", core: "n64", url: "https://raw.githubusercontent.com/bfirsh/jsnes/master/roms/lj65/lj65.nes" }
+    ];
+
+    let platFiltroAtual = 'todos';
     let arquivosSalvos = [];
 
-    // LÓGICA DE LOGIN COM E-MAIL
-    function fazerLoginEmail(e) {
-      e.preventDefault();
-      const email = document.getElementById('input-email').value;
-      
-      if(email) {
-        document.getElementById('user-name').innerText = email.split('@')[0];
-        document.getElementById('account-type').innerText = "Conta de E-mail Conectada";
-        document.getElementById('user-avatar').innerText = "✉️";
-        document.getElementById('modal-login').style.display = 'none';
-        alert(`✅ Bem-vindo! Login realizado com o e-mail: ${email}`);
-      }
-    }
+    // EXIBIR E FILTRAR JOGOS NA PLAYBOX STORE
+    function renderizarJogos() {
+      const grid = document.getElementById('games-catalog');
+      const termo = document.getElementById('game-search').value.toLowerCase();
+      grid.innerHTML = '';
 
-    // LÓGICA DE LOGIN FLEXÍVEL (MICROSOFT / VISITANTE)
-    function fazerLogin(tipo) {
-      const modal = document.getElementById('modal-login');
-      const nameElem = document.getElementById('user-name');
-      const typeElem = document.getElementById('account-type');
-      const avatarElem = document.getElementById('user-avatar');
+      const filtrados = catalogData.filter(j => {
+        const batePlataforma = platFiltroAtual === 'todos' || j.sistema === platFiltroAtual;
+        const bateNome = j.nome.toLowerCase().includes(termo);
+        return batePlataforma && bateNome;
+      });
 
-      if(tipo === 'microsoft') {
-        const msEmail = prompt("Digite seu e-mail da Microsoft (@outlook / @hotmail):", "usuario@outlook.com");
-        if(msEmail) {
-          nameElem.innerText = msEmail.split('@')[0];
-          typeElem.innerText = "Conta Microsoft Sincronizada";
-          avatarElem.innerText = "🟦";
-          alert("✅ Autenticado via Microsoft! 100TB de armazenamento vinculados.");
-        } else return;
-      } else {
-        nameElem.innerText = "Visitante";
-        typeElem.innerText = "Modo Convidado";
-        avatarElem.innerText = "👤";
-      }
-
-      modal.style.display = 'none';
-    }
-
-    // NAVEGAÇÃO DE ABAS
-    function switchTab(tabName, btn) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      
-      const targetTab = document.getElementById(`tab-${tabName}`);
-      if(targetTab) targetTab.classList.add('active');
-      if(btn) btn.classList.add('active');
-    }
-
-    // SISTEMA DE UPLOAD E ARQUIVOS
-    function enviarArquivo(e) {
-      const file = e.target.files[0];
-      if(!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        arquivosSalvos.push({ nome: file.name, data: evt.target.result });
-        renderizarArquivos();
-        alert(`📄 Arquivo "${file.name}" salvo na nuvem com sucesso!`);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function renderizarArquivos() {
-      const list = document.getElementById('file-list');
-      list.innerHTML = '';
-      if(arquivosSalvos.length === 0) {
-        list.innerHTML = '<p style="color:var(--text-sub);">Nenhum arquivo enviado.</p>';
+      if(filtrados.length === 0) {
+        grid.innerHTML = '<p style="color:var(--text-sub); grid-column: 1/-1;">Nenhum jogo encontrado com esse termo.</p>';
         return;
       }
-      arquivosSalvos.forEach(f => {
-        const div = document.createElement('div');
-        div.className = 'file-card';
-        div.innerHTML = `<strong>📄 ${f.nome}</strong><br><a href="${f.data}" download="${f.nome}" style="color:var(--green); font-size:0.8rem;">Baixar Arquivo</a>`;
-        list.appendChild(div);
+
+      filtrados.forEach(j => {
+        const card = document.createElement('div');
+        card.className = 'file-card';
+        card.innerHTML = `
+          <h3>🎮 ${j.nome}</h3>
+          <small style="color:var(--text-sub);">${j.sysName}</small>
+          <button class="btn-apple" style="margin-top:10px;" onclick="executarEmulador('${j.core}', '${j.url}', '${j.nome}')">▶️ Jogar</button>
+        `;
+        grid.appendChild(card);
       });
     }
 
-    function exportarBackup() {
-      const blob = new Blob([JSON.stringify(arquivosSalvos)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'BoxCloud_Saves_Backup.json';
-      a.click();
+    function filtrarPlataforma(plat, btn) {
+      platFiltroAtual = plat;
+      document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      renderizarJogos();
     }
 
-    // BOXTWISTER
-    function responder(correto) {
-      const b = document.getElementById('speech-box');
-      b.innerText = correto ? "📦 Box: Mandou super bem! Resposta correta!" : "📦 Box: Ops! Tente novamente!";
+    function filtrarJogos() {
+      renderizarJogos();
     }
 
-    function mudarFalta(txt) {
-      document.getElementById('speech-box').innerText = txt;
+    // EXECUTAR EMULADOR UNIVERSAL (EMULATOR JS)
+    function executarEmulador(sistema, romUrl, titulo) {
+      document.getElementById('emulator-screen').style.display = 'flex';
+      document.getElementById('game-title-display').innerText = `🎮 ${titulo}`;
+
+      const container = document.getElementById('emulator-container');
+      container.innerHTML = '<div id="game"></div>';
+
+      window.EJS_player = '#game';
+      window.EJS_core = sistema;
+      window.EJS_gameUrl = romUrl;
+      window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+
+      const script = document.createElement('script');
+      script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+      container.appendChild(script);
     }
 
-    // BAIXAR JOGOS
-    function baixarJogo(nome) {
-      const htmlContent = `<html><body style="background:#000;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh;"><h2>Jogo ${nome} iniciado!</h2></body></html>`;
-      const blob = new Blob([htmlContent], { type: 'text/html' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `${nome}_PlayBox.html`;
-      a.click();
-    }
+    function carregarRomLocal(e) {
+      const file = e.target.files[0];
+      if(!file) return;
 
-    // Inicialização
-    renderizarArquivos();
-  </script>
-</body>
-  </html>
-  
+      const blobUrl = URL.createObjectURL(file);
+      const ext = file.name.split('.').pop().toLowerCase();
+
+      let core = 'nes';
+      if(['smc', 'sfc', 'fig'].includes(ext)) c
