@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>BoxCloud - Web Edition</title>
+  <title>BoxCloud - Ultimate Edition</title>
   <style>
     :root {
       --glass-bg: rgba(255, 255, 255, 0.12);
@@ -13,27 +13,27 @@
       --text-main: #ffffff;
       --text-sub: rgba(255, 255, 255, 0.75);
       --accent: #007aff;
+      --green: #10b981;
+      --gold: #f59e0b;
+      --red: #ef4444;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: #0f0c20; color: var(--text-main); min-height: 100vh; overflow-x: hidden; position: relative; }
 
-    /* Esferas de Fundo */
     .bg-shape { position: fixed; border-radius: 50%; filter: blur(90px); z-index: 0; pointer-events: none; }
-    .shape1 { width: 250px; height: 250px; background: #7928ca; top: -50px; left: -50px; }
-    .shape2 { width: 250px; height: 250px; background: #0070f3; bottom: -50px; right: -50px; }
+    .shape1 { width: 300px; height: 300px; background: #7928ca; top: -50px; left: -50px; }
+    .shape2 { width: 300px; height: 300px; background: #0070f3; bottom: -50px; right: -50px; }
 
-    /* Modal de Login */
+    /* Modal de Login com Upgrade */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-      display: flex; justify-content: center; align-items: center; z-index: 9999;
-      padding: 20px;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px;
     }
 
     .glass-card {
       background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px);
-      border: 1px solid var(--glass-border); border-radius: 24px; padding: 2rem; width: 100%; max-width: 400px; text-align: center;
+      border: 1px solid var(--glass-border); border-radius: 24px; padding: 2rem; width: 100%; max-width: 420px; text-align: center;
     }
 
     .glass-input {
@@ -41,44 +41,51 @@
       padding: 14px; border-radius: 12px; color: white; font-size: 1rem; outline: none; margin-bottom: 1rem;
     }
 
-    .btn-apple-style {
+    .btn-apple {
       background: var(--accent); color: white; border: none; padding: 14px; border-radius: 14px;
       width: 100%; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
-      touch-action: manipulation;
+      transition: 0.2s;
     }
 
-    /* App Layout Mobile First */
+    /* Layout App */
     #app { display: flex; flex-direction: column; width: 100%; min-height: 100vh; z-index: 1; padding: 15px; gap: 15px; position: relative; }
+    @media (min-width: 800px) { #app { flex-direction: row; } aside { width: 280px; } }
 
     aside {
       background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border);
-      border-radius: 20px; padding: 1rem; display: flex; flex-direction: column; gap: 10px;
+      border-radius: 20px; padding: 1.2rem; display: flex; flex-direction: column; gap: 15px;
     }
 
-    nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+    nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; flex-wrap: nowrap; }
+    @media (min-width: 800px) { nav { flex-direction: column; } }
 
     .nav-btn {
-      background: transparent; border: none; color: var(--text-sub); padding: 10px 14px;
-      border-radius: 12px; font-size: 0.9rem; cursor: pointer; white-space: nowrap; flex-shrink: 0;
+      background: transparent; border: none; color: var(--text-sub); padding: 12px 16px;
+      border-radius: 14px; font-size: 0.95rem; cursor: pointer; white-space: nowrap; text-align: left;
     }
     .nav-btn.active { background: var(--glass-bg-hover); color: white; border: 1px solid rgba(255, 255, 255, 0.2); }
 
     main {
       flex: 1; background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border);
-      border-radius: 20px; padding: 1.2rem; overflow-y: auto;
+      border-radius: 20px; padding: 1.5rem; overflow-y: auto;
     }
 
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* BoxTwister */
-    .twister-card { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border); border-radius: 20px; padding: 1.5rem; text-align: center; }
-    .twister-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1rem; }
-    .twister-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 12px; cursor: pointer; }
+    /* BoxTwister Gamificado */
+    .twister-header { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 12px 18px; border-radius: 16px; margin-bottom: 1.5rem; }
+    .twister-card { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border); border-radius: 20px; padding: 1.8rem; text-align: center; }
+    .twister-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 1.5rem; }
+    .twister-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); color: white; padding: 14px; border-radius: 14px; cursor: pointer; font-size: 1rem; }
 
-    /* PlayBox Container */
-    #player-container { display: none; margin-top: 1rem; border-radius: 12px; overflow: hidden; background: #000; }
-    #emulator-iframe { width: 100%; height: 450px; border: none; }
+    /* PlayBox Store */
+    .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
+    .game-card { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); border-radius: 18px; padding: 15px; text-align: center; display: flex; flex-direction: column; gap: 10px; }
+
+    /* SocialBox */
+    .feed-post { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 16px; padding: 1rem; margin-bottom: 12px; }
+    .post-btn { background: transparent; border: none; color: var(--text-sub); cursor: pointer; font-size: 0.85rem; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -86,109 +93,222 @@
   <div class="bg-shape shape1"></div>
   <div class="bg-shape shape2"></div>
 
-  <!-- MODAL DE LOGIN (SEM 2FA) -->
+  <!-- MODAL DE LOGIN COM UPGRADE PARA 35TB -->
   <div id="modal-login" class="modal-overlay">
     <div class="glass-card">
-      <h2 style="margin-bottom:10px;">📦 BoxCloud</h2>
-      <p style="color:var(--text-sub); margin-bottom:20px;">Acesse seus jogos, aprendizado e nuvem de 5TB.</p>
+      <h2 style="margin-bottom:8px;">📦 BoxCloud</h2>
+      <p style="color:var(--text-sub); margin-bottom:15px; font-size:0.9rem;">
+        Entre com o seu e-mail e desbloqueie <strong style="color:var(--green);">35TB EXTRAS</strong> na sua Nuvem BoxCloudSaving!
+      </p>
       
-      <input type="email" id="email-input" class="glass-input" placeholder="Seu e-mail (opcional)" />
-      <input type="password" id="pass-input" class="glass-input" placeholder="Sua senha (opcional)" />
+      <input type="email" id="email-input" class="glass-input" placeholder="Digite seu e-mail para ganho imediato" />
+      <input type="password" id="pass-input" class="glass-input" placeholder="Sua senha" />
       
-      <button class="btn-apple-style" onclick="entrarDireto()">Entrar no Sistema</button>
+      <button class="btn-apple" onclick="loginComUpgrade()">🎁 Entrar e Ativar Upgrade de 35TB</button>
     </div>
   </div>
 
   <!-- APP PRINCIPAL -->
   <div id="app">
     <aside>
-      <div style="font-weight:bold; font-size:1.2rem; display:flex; justify-content:space-between; align-items:center;">
-        <span>📦 BoxCloud</span>
-        <span style="font-size: 0.75rem; color: #34d399; background: rgba(16,185,129,0.2); padding: 4px 8px; border-radius:8px;">AutoSave ON</span>
+      <div style="font-weight:800; font-size:1.3rem;">📦 BoxCloud</div>
+      
+      <div style="background: rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; padding:10px; border-radius:12px; font-size:0.8rem;">
+        ⚡ <strong>Plano Atual:</strong> <span id="storage-plan">5 TB</span><br>
+        <small id="saving-status">BoxCloudSaving: Sincronizado</small>
       </div>
+
       <nav>
-        <button class="nav-btn active" onclick="switchTab('cloud', this)">📁 Cloud</button>
-        <button class="nav-btn" onclick="switchTab('twister', this)">🌪️ BoxTwister</button>
-        <button class="nav-btn" onclick="switchTab('play', this)">🎮 PlayBox</button>
+        <button class="nav-btn active" onclick="switchTab('cloud', this)">📁 Cloud (Nuvem)</button>
+        <button class="nav-btn" onclick="switchTab('twister', this)" style="color:var(--gold);">🌪️ BoxTwister (100+ Idiomas)</button>
+        <button class="nav-btn" onclick="switchTab('play', this)">🎮 PlayBox Store</button>
+        <button class="nav-btn" onclick="switchTab('social', this)">🌐 SocialBox</button>
       </nav>
     </aside>
 
     <main>
-      <!-- Aba Cloud -->
+      <!-- ABA CLOUD -->
       <section id="tab-cloud" class="tab-content active">
-        <h2>Armazenamento BoxCloud (5TB)</h2>
-        <p style="color:var(--text-sub); margin-top:10px;">Nuvem integrada com o BoxCloudSaving para gerenciar seus dados e progresso no celular e na Web.</p>
-      </section>
-
-      <!-- Aba BoxTwister -->
-      <section id="tab-twister" class="tab-content">
-        <h2>BoxTwister 🌪️ - Idiomas</h2>
+        <h2>Armazenamento BoxCloud</h2>
+        <p style="color:var(--text-sub); margin-top:5px;">Espaço na Nuvem disponível: <strong id="cloud-total-display" style="color:var(--green);">5.000 GB (5TB)</strong></p>
         <br>
+        <button class="btn-apple" style="width:auto; padding:10px 20px;" onclick="alert('Backup feito automaticamente via BoxCloudSaving!')">+ Enviar Arquivo para a Nuvem</button>
+      </section>
+
+      <!-- ABA BOXTWISTER (DUOLINGO CONCORRÊNCIA) -->
+      <section id="tab-twister" class="tab-content">
+        <div class="twister-header">
+          <div>🔥 Ofensiva: <strong>5 Dias</strong></div>
+          <div>❤️ Vidas: <strong style="color:var(--red);">5/5</strong></div>
+          <div>⭐ XP: <strong id="twister-xp" style="color:var(--gold);">150 XP</strong></div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <h2>BoxTwister 🌪️</h2>
+          <select id="language-select" onchange="trocarIdioma()" style="background:rgba(255,255,255,0.1); color:white; border:1px solid var(--glass-border); padding:8px 12px; border-radius:10px; outline:none;">
+            <option value="pl" style="color:black;">🇵🇱 Polonês</option>
+            <option value="en" style="color:black;">🇺🇸 Inglês</option>
+            <option value="es" style="color:black;">🇪🇸 Espanhol</option>
+            <option value="ja" style="color:black;">🇯🇵 Japonês</option>
+            <option value="de" style="color:black;">🇩🇪 Alemão</option>
+            <option value="zh" style="color:black;">🇨🇳 Mandarim</option>
+            <option value="uk" style="color:black;">🇺🇦 Ucraniano</option>
+            <option value="more" style="color:black;">🌐 Outros (+100 Idiomas)</option>
+          </select>
+        </div>
+
         <div class="twister-card">
-          <h3>Como se diz "Maçã" em Inglês?</h3>
-          <div class="twister-options">
-            <button class="twister-btn" onclick="alert('Incorreto!')">Water</button>
-            <button class="twister-btn" onclick="alert('Correto! +10 XP salvos no BoxCloudSaving...')">Apple</button>
+          <p style="color:var(--text-sub); font-size:0.85rem; margin-bottom:5px;">TRADUZA A FRASE:</p>
+          <h3 id="twister-q" style="font-size:1.5rem; margin-bottom:10px;">"Dzień dobry"</h3>
+          <button onclick="ouvirAudio()" style="background:none; border:none; color:var(--accent); cursor:pointer; font-size:0.9rem; margin-bottom:15px;">🔊 Ouvir Pronúncia Nativa</button>
+
+          <div class="twister-options" id="twister-opts">
+            <!-- Opções geradas dinamicamente -->
           </div>
         </div>
       </section>
 
-      <!-- Aba PlayBox -->
+      <!-- ABA PLAYBOX STORE -->
       <section id="tab-play" class="tab-content">
-        <h2>PlayBox (Netplay & Emulador)</h2>
-        <p style="color:var(--text-sub); font-size:0.85rem; margin-top:5px; margin-bottom:15px;">Escolha uma plataforma para iniciar os servidores de jogos online:</p>
-        
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn-apple-style" style="width:auto; padding:10px 18px;" onclick="abrirJogo('nes')">NES Online</button>
-          <button class="btn-apple-style" style="width:auto; padding:10px 18px; background:#7928ca;" onclick="abrirJogo('snes')">SNES Online</button>
+        <h2>PlayBox Store 🎮</h2>
+        <p style="color:var(--text-sub); font-size:0.85rem; margin-top:4px;">Baixe e instale atalhos diretos de jogos retro na tela inicial do seu celular/PC.</p>
+
+        <div class="store-grid">
+          <div class="game-card">
+            <h3>🕹️ Super Mario World</h3>
+            <p style="color:var(--text-sub); font-size:0.8rem;">SNES • Multiplayer Netplay</p>
+            <button class="btn-apple" style="background:var(--green); font-size:0.85rem; padding:8px;" onclick="instalarJogoNoCelular('Super Mario World', 'snes', 'https://cdn.emulatorjs.org/stable/data/games/Space%20Invaders%20(USA).nes')">📥 Instalar na Tela Inicial</button>
+          </div>
+
+          <div class="game-card">
+            <h3>👾 Space Invaders</h3>
+            <p style="color:var(--text-sub); font-size:0.8rem;">NES • Clássico Arcade</p>
+            <button class="btn-apple" style="background:var(--green); font-size:0.85rem; padding:8px;" onclick="instalarJogoNoCelular('Space Invaders', 'nes', 'https://cdn.emulatorjs.org/stable/data/games/Space%20Invaders%20(USA).nes')">📥 Instalar na Tela Inicial</button>
+          </div>
+
+          <div class="game-card">
+            <h3>💿 Tekken 3</h3>
+            <p style="color:var(--text-sub); font-size:0.8rem;">PS1 • Luta Online</p>
+            <button class="btn-apple" style="background:var(--green); font-size:0.85rem; padding:8px;" onclick="instalarJogoNoCelular('Tekken 3', 'psx', '')">📥 Instalar na Tela Inicial</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA SOCIALBOX -->
+      <section id="tab-social" class="tab-content">
+        <h2>SocialBox 🌐</h2>
+        <p style="color:var(--text-sub); font-size:0.85rem; margin-bottom:15px;">Conecte-se com outros estudantes e jogadores.</p>
+
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+          <input type="text" id="social-input" class="glass-input" style="margin:0;" placeholder="Compartilhe seu progresso ou conquistas..." />
+          <button class="btn-apple" style="width:auto; padding:0 20px;" onclick="postarSocial()">Publicar</button>
         </div>
 
-        <div id="player-container">
-          <div style="background:rgba(255,255,255,0.1); padding:8px 12px; display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:0.8rem; color:#34d399;">🌐 Conectado ao Netplay Server</span>
-            <button onclick="fecharJogo()" style="background:red; color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer;">Sair</button>
+        <div id="social-feed">
+          <div class="feed-post">
+            <strong>@MateusPolyglot:</strong> Consegui 100 XP no BoxTwister estudando Polonês hoje! 🇵🇱🔥
+            <div><button class="post-btn" onclick="curtir(this)">❤️ 12 Curtidas</button></div>
           </div>
-          <iframe id="emulator-iframe"></iframe>
         </div>
       </section>
     </main>
   </div>
 
   <script>
-    // Login Direto
-    function entrarDireto() {
-      const modal = document.getElementById('modal-login');
-      if (modal) {
-        modal.style.display = 'none';
+    let userXP = 150;
+    let currentAudioText = "Dzień dobry";
+    let currentLangCode = "pl-PL";
+
+    // 1. LOGIN E UPGRADE DE STORAGE PARA 35TB
+    function loginComUpgrade() {
+      const email = document.getElementById('email-input').value;
+      
+      // Fecha o modal
+      document.getElementById('modal-login').style.display = 'none';
+
+      // Atualiza interface com 35TB Extrase
+      document.getElementById('storage-plan').innerText = '40 TB (35TB Extras Ativados!)';
+      document.getElementById('storage-plan').style.color = '#34d399';
+      document.getElementById('cloud-total-display').innerText = '40.000 GB (40TB)';
+
+      alert('🎉 Sucesso! E-mail cadastrado e +35TB EXTRAS adicionados automaticamente na sua conta BoxCloudSaving.');
+    }
+
+    // 2. BOXTWISTER (100+ IDIOMAS + DUOLINGO STYLE)
+    const bancoQuestoes = {
+      pl: { q: '"Dzień dobry"', text: 'Dzień dobry', code: 'pl-PL', opts: ['Bom dia', 'Boa noite', 'Obrigado', 'Maçã'], corr: 0 },
+      en: { q: '"How are you?"', text: 'How are you', code: 'en-US', opts: ['Qual seu nome?', 'Como você está?', 'Onde vai?', 'Por favor'], corr: 1 },
+      es: { q: '"Muchas gracias"', text: 'Muchas gracias', code: 'es-ES', opts: ['De nada', 'Com licença', 'Muito obrigado', 'Até logo'], corr: 2 },
+      ja: { q: '"Arigatou"', text: 'Arigatou', code: 'ja-JP', opts: ['Obrigado', 'Desculpe', 'Olá', 'Tchau'], corr: 0 },
+      de: { q: '"Guten Tag"', text: 'Guten Tag', code: 'de-DE', opts: ['Boa noite', 'Bom dia / Boa tarde', 'Até amanhã', 'Por favor'], corr: 1 },
+      zh: { q: '"Nǐ hǎo"', text: 'Nǐ hǎo', code: 'zh-CN', opts: ['Tchau', 'Por favor', 'Olá', 'Obrigado'], corr: 2 },
+      uk: { q: '"Dabry dzien"', text: 'Dabry dzien', code: 'uk-UA', opts: ['Bom dia', 'Boa noite', 'Obrigado', 'Por favor'], corr: 0 }
+    };
+
+    function trocarIdioma() {
+      const lang = document.getElementById('language-select').value;
+      if(lang === 'more') {
+        alert('Carregando biblioteca expandida com +100 idiomas suportados via BoxCloudSaving!');
+        return;
+      }
+
+      const qData = bancoQuestoes[lang] || bancoQuestoes['pl'];
+      document.getElementById('twister-q').innerText = qData.q;
+      currentAudioText = qData.text;
+      currentLangCode = qData.code;
+
+      const optsContainer = document.getElementById('twister-opts');
+      optsContainer.innerHTML = '';
+
+      qData.opts.forEach((opcao, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'twister-btn';
+        btn.innerText = opcao;
+        btn.onclick = () => responderTwister(idx === qData.corr);
+        optsContainer.appendChild(btn);
+      });
+    }
+
+    function responderTwister(correto) {
+      if(correto) {
+        userXP += 15;
+        document.getElementById('twister-xp').innerText = `${userXP} XP`;
+        alert('✨ Resposta Correta! +15 XP salvos no BoxCloudSaving.');
+      } else {
+        alert('❌ Incorreto! Tente novamente.');
       }
     }
 
-    // Navegação de Abas
-    function switchTab(tabName, btn) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(`tab-${tabName}`).classList.add('active');
-      if(btn) btn.classList.add('active');
+    function ouvirAudio() {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(currentAudioText);
+        utterance.lang = currentLangCode;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert('Aúdio sintetizado não suportado neste navegador.');
+      }
     }
 
-    // Emulador Web
-    function abrirJogo(system) {
-      const container = document.getElementById('player-container');
-      const iframe = document.getElementById('emulator-iframe');
-      
-      container.style.display = 'block';
+    // Initialize BoxTwister com Polonês
+    trocarIdioma();
 
-      // Código de inicialização do EmulatorJS com ROM de teste pública
-      const emuCode = `
+    // 3. INSTALAR JOGOS DA PLAYBOX STORE DIRETO NA TELA DO CELULAR
+    function instalarJogoNoCelular(nomeJogo, sistema, romUrl) {
+      const jogoHTML = `
         <!DOCTYPE html>
-        <html>
-        <head><style>body, html { margin:0; padding:0; height:100%; background:#000; overflow:hidden; }</style></head>
+        <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${nomeJogo} - PlayBox Native</title>
+          <style>body, html { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }</style>
+        </head>
         <body>
           <div id="game" style="width:100%;height:100%;"></div>
           <script type="text/javascript">
             EJS_player = '#game';
-            EJS_core = '${system}';
-            EJS_gameUrl = 'https://cdn.emulatorjs.org/stable/data/games/Space%20Invaders%20(USA).nes'; 
+            EJS_core = '${sistema}';
+            EJS_gameUrl = '${romUrl}';
             EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
             EJS_netplayUrl = 'https://netplay.emulatorjs.org';
           <\/script>
@@ -197,15 +317,44 @@
         </html>
       `;
 
-      iframe.srcdoc = emuCode;
+      const blob = new Blob([jogoHTML], { type: 'text/html' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${nomeJogo.replace(/\s+/g, '_')}_PlayBox.html`;
+      link.click();
+
+      alert(`📱 Atalho executável de "${nomeJogo}" baixado! Para adicionar à tela inicial:\n1. Abra o arquivo baixado.\n2. Toque nos 3 pontos do navegador -> 'Adicionar à tela inicial'.`);
     }
 
-    function fecharJogo() {
-      const container = document.getElementById('player-container');
-      const iframe = document.getElementById('emulator-iframe');
-      iframe.srcdoc = '';
-      container.style.display = 'none';
+    // 4. SOCIALBOX
+    function postarSocial() {
+      const input = document.getElementById('social-input');
+      if(!input.value.trim()) return;
+
+      const feed = document.getElementById('social-feed');
+      const newPost = document.createElement('div');
+      newPost.className = 'feed-post';
+      newPost.innerHTML = `
+        <strong>@Você:</strong> ${input.value}
+        <div><button class="post-btn" onclick="curtir(this)">❤️ 0 Curtidas</button></div>
+      `;
+      feed.prepend(newPost);
+      input.value = '';
+    }
+
+    function curtir(btn) {
+      let count = parseInt(btn.innerText.replace(/[^0-9]/g, '')) + 1;
+      btn.innerText = `❤️ ${count} Curtidas`;
+    }
+
+    // NAVEGAÇÃO DE ABAS
+    function switchTab(tabName, btn) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+      if(btn) btn.classList.add('active');
     }
   </script>
 </body>
-</html>
+              </html>
+  
